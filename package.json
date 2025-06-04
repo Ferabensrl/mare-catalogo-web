@@ -1,0 +1,27 @@
+{
+  "name": "mare-catalogo-web",
+  "version": "1.0.0",
+  "description": "Catálogo digital MARÉ - Integrado con GitHub",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "npm run convert && next build",
+    "start": "next start",
+    "lint": "next lint",
+    "convert": "node scripts/convert-excel.js"
+  },
+  "dependencies": {
+    "next": "^14.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "lucide-react": "^0.263.1"
+  },
+  "devDependencies": {
+    "xlsx": "^0.18.5",
+    "eslint": "^8.0.0",
+    "eslint-config-next": "^14.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
