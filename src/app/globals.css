@@ -1,0 +1,94 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --mare-primary: #8F6A50;
+  --mare-secondary: #E3D4C1;
+  --mare-accent: #25D366;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: var(--mare-secondary);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Estilos personalizados para MARÉ */
+.mare-primary {
+  background-color: var(--mare-primary);
+}
+
+.mare-secondary {
+  background-color: var(--mare-secondary);
+}
+
+.mare-text-primary {
+  color: var(--mare-primary);
+}
+
+.mare-border-primary {
+  border-color: var(--mare-primary);
+}
+
+/* Animaciones suaves */
+.transition-mare {
+  transition: all 0.3s ease;
+}
+
+/* Scrollbar personalizado */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--mare-primary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #6d4d35;
+}
+
+/* Estilos para el carrusel de imágenes */
+.image-carousel {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.5rem;
+}
+
+.image-carousel img {
+  transition: opacity 0.3s ease;
+}
+
+/* Estilos para los botones de colores */
+.color-button {
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+}
+
+.color-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
