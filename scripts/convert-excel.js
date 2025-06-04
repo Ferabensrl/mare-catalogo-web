@@ -39,8 +39,8 @@ for (let row = 1; row <= range.e.r; row++) {
   const imagenes = [];
   for (let col = 6; col <= 16; col++) {
     const nombreImagen = getCell(worksheet, row, col);
-    if (nombreImagen && nombreImagen.trim()) {
-      imagenes.push(`https://ferabensrl.github.io/mare-catalogo-web/imagenes/${nombreImagen.trim()}.jpg`);
+    if (nombreImagen && nombreImagen.toString().trim()) {
+      imagenes.push(`https://ferabensrl.github.io/mare-catalogo-web/imagenes/${nombreImagen.toString().trim()}.jpg`);
     }
   }
   
@@ -50,8 +50,8 @@ for (let row = 1; row <= range.e.r; row++) {
     const colorDisponible = getCell(worksheet, row, col);
     if (colorDisponible && (colorDisponible.toString().toUpperCase() === 'SI' || colorDisponible.toString().toUpperCase() === 'SÍ')) {
       const nombreColor = headers[col];
-      if (nombreColor && nombreColor.trim()) {
-        colores.push(nombreColor.trim());
+      if (nombreColor && nombreColor.toString().trim()) {
+        colores.push(nombreColor.toString().trim());
       }
     }
   }
