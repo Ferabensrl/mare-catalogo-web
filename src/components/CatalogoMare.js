@@ -1,7 +1,8 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
-import { ShoppingCart, Plus, Minus, Send, Search, Loader, AlertCircle } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
+import { ShoppingCart, Plus, Minus, Send, Search, Loader, AlertCircle, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const CatalogoMare = () => {
   const [productos, setProductos] = useState([]);
@@ -12,9 +13,11 @@ const CatalogoMare = () => {
   const [comentarioFinal, setComentarioFinal] = useState('');
   const [comentariosProducto, setComentariosProducto] = useState({});
   const [imagenesActivas, setImagenesActivas] = useState({});
+  const [imagenModal, setImagenModal] = useState(null);
   const [categorias, setCategorias] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
+  const touchStart = useRef({});
 
   // Cargar datos desde el JSON generado automáticamente
   const cargarDatos = async () => {
@@ -136,6 +139,12 @@ const CatalogoMare = () => {
       [productoId]: indice
     }));
   };
+
+  const abrirImagen = (productoId, indice) => {
+    setImagenModal({ productoId, indice });
+  };
+
+  const cerrarImagen = () => setImagenModal(null);
 
   const calcularTotal = () => {
     return Object.values(carrito).reduce((total, item) => {
@@ -350,26 +359,60 @@ const CatalogoMare = () => {
               return (
                 <div key={producto.codigo} className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
                   {/* CARRUSEL DE IMÁGENES */}
-                  <div className="relative">
-                    <img
+                  <div
+                    className="relative"
+                    onTouchStart={(e) => (touchStart.current[producto.codigo] = e.touches[0].clientX)}
+                    onTouchEnd={(e) => {
+                      const start = touchStart.current[producto.codigo];
+                      const end = e.changedTouches[0].clientX;
+                      if (start - end > 50) {
+                        const next = (imagenesActivas[producto.codigo] || 0) + 1;
+                        cambiarImagen(producto.codigo, next >= producto.imagenes.length ? 0 : next);
+                      } else if (end - start > 50) {
+                        const prev = (imagenesActivas[producto.codigo] || 0) - 1;
+                        cambiarImagen(producto.codigo, prev < 0 ? producto.imagenes.length - 1 : prev);
+                      }
+                    }}
+                  >
+                    <Image
                       src={producto.imagenes[imagenesActivas[producto.codigo] || 0]}
                       alt={producto.nombre}
-                      className="w-full object-cover"
-                      style={{ 
-                        height: window.innerWidth < 640 ? '200px' : 
-                               window.innerWidth < 1024 ? '240px' : '280px' 
-                      }}
+                      width={400}
+                      height={400}
+                      className="w-full h-48 sm:h-60 md:h-72 object-cover cursor-pointer"
+                      onClick={() => abrirImagen(producto.codigo, imagenesActivas[producto.codigo] || 0)}
                       onError={(e) => {
                         const currentSrc = e.target.src;
                         if (currentSrc.includes('.jpg')) {
                           e.target.src = currentSrc.replace('.jpg', '.png');
-                        } else if (currentSrc.includes('.png')) {
-                          e.target.src = `https://via.placeholder.com/400x400/8F6A50/E3D4C1?text=${encodeURIComponent(producto.nombre)}`;
                         } else {
                           e.target.src = `https://via.placeholder.com/400x400/8F6A50/E3D4C1?text=${encodeURIComponent(producto.nombre)}`;
                         }
                       }}
                     />
+
+                    {producto.imagenes.length > 1 && (
+                      <>
+                        <button
+                          onClick={() => {
+                            const prev = (imagenesActivas[producto.codigo] || 0) - 1;
+                            cambiarImagen(producto.codigo, prev < 0 ? producto.imagenes.length - 1 : prev);
+                          }}
+                          className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 rounded-full p-1"
+                        >
+                          <ChevronLeft size={20} />
+                        </button>
+                        <button
+                          onClick={() => {
+                            const next = (imagenesActivas[producto.codigo] || 0) + 1;
+                            cambiarImagen(producto.codigo, next >= producto.imagenes.length ? 0 : next);
+                          }}
+                          className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 rounded-full p-1"
+                        >
+                          <ChevronRight size={20} />
+                        </button>
+                      </>
+                    )}
                     
                     {/* Indicadores de imágenes */}
                     {producto.imagenes.length > 1 && (
@@ -435,7 +478,7 @@ const CatalogoMare = () => {
                           min="1"
                           defaultValue="1"
                           id={'cantidad-' + producto.codigo}
-                          className="w-20 text-center border-2 rounded-lg px-3 py-2 text-lg font-semibold"
+                          className="w-24 text-center border-2 rounded-lg px-3 py-2 text-lg font-semibold placeholder-gray-400"
                           style={{ borderColor: '#8F6A50', color: '#8F6A50', fontSize: '16px' }}
                         />
                       </div>
@@ -449,8 +492,8 @@ const CatalogoMare = () => {
                             type="text"
                             placeholder="Ej: Color específico, talle, observaciones..."
                             id={'comentario-' + producto.codigo}
-                            className="flex-1 text-base border-2 rounded-lg px-4 py-3 bg-gray-50"
-                            style={{ borderColor: '#8F6A50', fontSize: '16px' }}
+                            className="flex-1 text-base border-2 rounded-lg px-4 py-3 bg-gray-50 placeholder-gray-400"
+                            style={{ borderColor: '#8F6A50', fontSize: '16px', color: '#8F6A50' }}
                           />
                           <button
                             onClick={() => {
@@ -487,7 +530,7 @@ const CatalogoMare = () => {
                             type="text"
                             value={comentariosProducto[producto.codigo]}
                             onChange={(e) => actualizarComentarioProducto(producto.codigo, e.target.value)}
-                            className="w-full text-base border-2 rounded-lg px-4 py-3 bg-white"
+                            className="w-full text-base border-2 rounded-lg px-4 py-3 bg-white placeholder-gray-400"
                             style={{ borderColor: '#8F6A50', color: '#8F6A50', fontSize: '16px' }}
                             placeholder="Edita tu comentario aquí..."
                           />
@@ -758,6 +801,40 @@ const CatalogoMare = () => {
             </div>
           )}
         </div>
+      )}
+
+      {imagenModal && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+          <div className="relative">
+            <button
+              onClick={cerrarImagen}
+              className="absolute -top-3 -right-3 bg-black text-white rounded-full p-2"
+            >
+              ✕
+            </button>
+            <Image
+              src={productos.find(p => p.codigo === imagenModal.productoId).imagenes[imagenModal.indice]}
+              alt="Imagen ampliada"
+              width={600}
+              height={600}
+              className="max-w-[90vw] max-h-[90vh] object-contain rounded-lg"
+            />
+          </div>
+        </div>
+      )}
+
+      {!mostrarCarrito && (
+        <button
+          onClick={() => setMostrarCarrito(true)}
+          className="fixed bottom-4 right-4 bg-[#8F6A50] text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg z-40"
+        >
+          <ShoppingCart size={24} />
+          {cantidadItems > 0 && (
+            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+              {cantidadItems}
+            </span>
+          )}
+        </button>
       )}
     </div>
   );
