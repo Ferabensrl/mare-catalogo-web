@@ -354,7 +354,14 @@ const CatalogoMare = () => {
                       alt={producto.nombre}
                       className="w-full h-48 object-cover"
                       onError={(e) => {
-                        e.target.src = `https://via.placeholder.com/400x400/8F6A50/E3D4C1?text=${encodeURIComponent(producto.nombre)}`;
+                        const currentSrc = e.target.src;
+                        if (currentSrc.includes('.jpg')) {
+                          e.target.src = currentSrc.replace('.jpg', '.png');
+                        } else if (currentSrc.includes('.png')) {
+                          e.target.src = `https://via.placeholder.com/400x400/8F6A50/E3D4C1?text=${encodeURIComponent(producto.nombre)}`;
+                        } else {
+                          e.target.src = `https://via.placeholder.com/400x400/8F6A50/E3D4C1?text=${encodeURIComponent(producto.nombre)}`;
+                        }
                       }}
                     />
                     
