@@ -352,7 +352,8 @@ const CatalogoMare = () => {
                     <img
                       src={producto.imagenes[imagenesActivas[producto.codigo] || 0]}
                       alt={producto.nombre}
-                      className="w-full h-16 sm:h-18 md:h-20 object-cover"
+                      className="w-full object-cover"
+                      style={{ height: '80px' }}
                       onError={(e) => {
                         const currentSrc = e.target.src;
                         if (currentSrc.includes('.jpg')) {
