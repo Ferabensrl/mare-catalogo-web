@@ -14,13 +14,7 @@
       "https://ferabensrl.github.io/mare-catalogo-web/imagenes/PASH5016-5.jpg",
       "https://ferabensrl.github.io/mare-catalogo-web/imagenes/PASH5016-6.jpg"
     ],
-    "colores": [
-      "Negro",
-      "Nude",
-      "Verde",
-      "Salmon",
-      "Mostaza"
-    ],
+    "colores": ["Negro", "Nude", "Verde", "Salmon", "Mostaza"],
     "disponible": true
   },
   {
@@ -37,12 +31,7 @@
       "https://ferabensrl.github.io/mare-catalogo-web/imagenes/LB233-4.jpg",
       "https://ferabensrl.github.io/mare-catalogo-web/imagenes/LB233-5.jpg"
     ],
-    "colores": [
-      "Negro",
-      "Lila",
-      "Rosado",
-      "Bordeaux"
-    ],
+    "colores": ["Negro", "Lila", "Rosado", "Bordeaux"],
     "disponible": true
   },
   {
@@ -58,14 +47,7 @@
       "https://ferabensrl.github.io/mare-catalogo-web/imagenes/LB270-3.jpg",
       "https://ferabensrl.github.io/mare-catalogo-web/imagenes/LB270-4.jpg"
     ],
-    "colores": [
-      "Negro",
-      "Rojo",
-      "Rosa Viejo",
-      "Petroleo",
-      "Azul",
-      "Mostaza"
-    ],
+    "colores": ["Negro", "Rojo", "Rosa Viejo", "Petroleo", "Azul", "Mostaza"],
     "disponible": true
   },
   {
@@ -93,13 +75,7 @@
       "https://ferabensrl.github.io/mare-catalogo-web/imagenes/LB1091-2.jpg",
       "https://ferabensrl.github.io/mare-catalogo-web/imagenes/LB1091-3.jpg"
     ],
-    "colores": [
-      "Negro",
-      "Rosado",
-      "Rosa Viejo",
-      "Azul",
-      "Mostaza"
-    ],
+    "colores": ["Negro", "Rosado", "Rosa Viejo", "Azul", "Mostaza"],
     "disponible": true
   },
   {
@@ -116,35 +92,20 @@
     "disponible": true
   },
   {
-    "codigo": 24002,
-    "nombre": "Set caravanas",
-    "descripcion": "Set caravanas de acero",
-    "categoria": "Caravanas acero",
-    "precio": 79,
-    "medidas": NaN,
-    "imagenes": [
-      "https://cdn.jsdelivr.net/gh/Ferabensrl/catalogo-mare@main/imagenes/24002"
-    ],
-    "colores_disponibles": [],
-    "estado": "activo"
-  },
-  {
     "codigo": "LB318",
     "nombre": "Bandolera",
-    "descripcion": "Bandolera",
     "categoria": "Marroquineria",
-    "precio": 695,
+    "precio": "695",
+    "descripcion": "Bandolera",
     "medidas": "25*12*19",
     "imagenes": [
-      "https://cdn.jsdelivr.net/gh/Ferabensrl/catalogo-mare@main/imagenes/LB318-1",
-      "SI"
+      "https://ferabensrl.github.io/mare-catalogo-web/imagenes/LB318-1.jpg",
+      "https://ferabensrl.github.io/mare-catalogo-web/imagenes/LB318-2.jpg",
+      "https://ferabensrl.github.io/mare-catalogo-web/imagenes/LB318-3.jpg",
+      "https://ferabensrl.github.io/mare-catalogo-web/imagenes/LB318-4.jpg",
+      "https://ferabensrl.github.io/mare-catalogo-web/imagenes/LB318-5.jpg"
     ],
-    "colores_disponibles": [
-      "Rosado",
-      "Beige",
-      "Bordeaux",
-      "Rosa Viejo"
-    ],
-    "estado": "activo"
+    "colores": ["Negro", "Rosado", "Beige", "Bordeaux", "Rosa Viejo"],
+    "disponible": true
   }
 ]
