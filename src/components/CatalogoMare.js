@@ -354,8 +354,8 @@ const CatalogoMare = () => {
                       alt={producto.nombre}
                       className="w-full object-cover"
                       style={{ 
-                        height: window.innerWidth < 640 ? '180px' : 
-                               window.innerWidth < 1024 ? '200px' : '220px' 
+                        height: window.innerWidth < 640 ? '200px' : 
+                               window.innerWidth < 1024 ? '240px' : '280px' 
                       }}
                       onError={(e) => {
                         const currentSrc = e.target.src;
