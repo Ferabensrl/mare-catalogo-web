@@ -116,6 +116,19 @@
     "disponible": true
   },
   {
+    "codigo": 24002,
+    "nombre": "Set caravanas",
+    "descripcion": "Set caravanas de acero",
+    "categoria": "Caravanas acero",
+    "precio": 79,
+    "medidas": NaN,
+    "imagenes": [
+      "https://cdn.jsdelivr.net/gh/Ferabensrl/catalogo-mare@main/imagenes/24002"
+    ],
+    "colores_disponibles": [],
+    "estado": "activo"
+  },
+  {
     "codigo": "LB318",
     "nombre": "Bandolera",
     "descripcion": "Bandolera",
@@ -124,17 +137,14 @@
     "medidas": "25*12*19",
     "imagenes": [
       "https://cdn.jsdelivr.net/gh/Ferabensrl/catalogo-mare@main/imagenes/LB318-1",
-      "https://cdn.jsdelivr.net/gh/Ferabensrl/catalogo-mare@main/imagenes/LB318-2",
-      "https://cdn.jsdelivr.net/gh/Ferabensrl/catalogo-mare@main/imagenes/LB318-3",
-      "https://cdn.jsdelivr.net/gh/Ferabensrl/catalogo-mare@main/imagenes/LB318-4",
-      "https://cdn.jsdelivr.net/gh/Ferabensrl/catalogo-mare@main/imagenes/LB318-5"
+      "SI"
     ],
     "colores_disponibles": [
-      "Negro",
       "Rosado",
       "Beige",
       "Bordeaux",
       "Rosa Viejo"
-    ]
+    ],
+    "estado": "activo"
   }
 ]
