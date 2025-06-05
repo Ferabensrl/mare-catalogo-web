@@ -79,19 +79,24 @@ function getCell(worksheet, row, col) {
   return cell ? cell.v : '';
 }
 
-// Crear la carpeta public si no existe
+// Crear las carpetas necesarias
 const publicDir = 'public';
+const dataDir = 'datos';
+
 if (!fs.existsSync(publicDir)) {
   fs.mkdirSync(publicDir, { recursive: true });
   console.log('📁 Carpeta public creada');
 }
 
-// Guardar en public/productos.json
+// Guardar en public/productos.json Y también en datos/productos.json (para GitHub)
 const outputPath = path.join(publicDir, 'productos.json');
+const dataOutputPath = path.join(dataDir, 'productos.json');
+
 fs.writeFileSync(outputPath, JSON.stringify(productos, null, 2));
+fs.writeFileSync(dataOutputPath, JSON.stringify(productos, null, 2));
 
 console.log('🎉 Conversión completada exitosamente!');
-console.log(`📁 Archivo generado: ${outputPath}`);
+console.log(`📁 Archivos generados: ${outputPath} y ${dataOutputPath}`);
 console.log(`📊 Total productos: ${productos.length}`);
 
 // Mostrar categorías únicas
