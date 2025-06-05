@@ -352,7 +352,7 @@ const CatalogoMare = () => {
                     <img
                       src={producto.imagenes[imagenesActivas[producto.codigo] || 0]}
                       alt={producto.nombre}
-                      className="w-full h-48 object-cover"
+                      className="w-full h-40 object-cover"
                       onError={(e) => {
                         const currentSrc = e.target.src;
                         if (currentSrc.includes('.jpg')) {
@@ -591,112 +591,165 @@ const CatalogoMare = () => {
 
       {/* Modal del Carrito */}
       {mostrarCarrito && (
-        <div className="fixed inset-0 bg-black/50 z-50">
-          <div className="h-full w-full flex flex-col bg-white">
-            <div className="bg-white border-b p-4 shadow-sm z-10">
-              <div className="flex items-center justify-between">
-                <div></div>
-                <h2 className="text-xl font-bold" style={{ color: '#8F6A50' }}>
-                  🛒 Mi Pedido
-                </h2>
-                <button
-                  onClick={() => setMostrarCarrito(false)}
-                  className="text-gray-500 hover:text-gray-700 text-2xl px-4 py-2 rounded-lg hover:bg-gray-100 border"
-                >
-                  ✕
-                </button>
-              </div>
-            </div>
-            
-            <div className="flex-1 overflow-y-auto">
-              <div className="p-4">
-                {Object.keys(carrito).length === 0 ? (
-                  <div className="text-center py-8">
-                    <p className="text-gray-500 mb-2">No hay productos en el carrito</p>
-                  </div>
-                ) : (
-                  <div className="space-y-3 mb-6">
-                    {Object.entries(carrito).map(([key, item]) => (
-                      <div key={key} className="p-3 rounded-lg border" style={{ backgroundColor: '#E3D4C1', borderColor: '#8F6A50' }}>
-                        <div className="flex items-center justify-between">
-                          <div className="flex-1">
-                            <h4 className="font-bold" style={{ color: '#8F6A50' }}>
-                              {item.producto.nombre} ({item.producto.codigo})
-                            </h4>
-                            <p className="text-sm" style={{ color: '#8F6A50' }}>
-                              {item.color}: {item.cantidad} unidades × ${item.producto.precio}
-                            </p>
-                          </div>
-                          <div className="flex items-center space-x-1">
-                            <button
-                              onClick={() => actualizarCantidad(key, item.cantidad - 1)}
-                              className="p-1 bg-white rounded-full hover:bg-gray-100 transition-colors border"
-                            >
-                              <Minus size={16} style={{ color: '#8F6A50' }} />
-                            </button>
-                            
-                            <input
-                              type="number"
-                              min="1"
-                              value={item.cantidad}
-                              onChange={(e) => establecerCantidad(key, e.target.value)}
-                              className="w-16 text-center font-bold border rounded px-2 py-1"
-                              style={{ borderColor: '#8F6A50', color: '#8F6A50' }}
-                            />
-                            
-                            <button
-                              onClick={() => actualizarCantidad(key, item.cantidad + 1)}
-                              className="p-1 bg-white rounded-full hover:bg-gray-100 transition-colors border"
-                            >
-                              <Plus size={16} style={{ color: '#8F6A50' }} />
-                            </button>
-                            
-                            <button
-                              onClick={() => eliminarDelCarrito(key)}
-                              className="text-red-500 hover:text-red-700 text-sm font-medium px-2 py-1 rounded ml-2"
-                              style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)' }}
-                            >
-                              🗑️
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-            
-            <div className="bg-white border-t p-4 shadow-lg">
-              <div className="flex justify-between items-center text-xl font-bold mb-4">
-                <span style={{ color: '#8F6A50' }}>💳 Total:</span>
-                <span style={{ color: '#8F6A50' }}>${calcularTotal()}</span>
-              </div>
-              
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-2" style={{ color: '#8F6A50' }}>
-                  📝 Comentarios adicionales del pedido:
-                </label>
-                <textarea
-                  placeholder="Ej: Entregar urgente, horario de recepción..."
-                  value={comentarioFinal}
-                  onChange={(e) => setComentarioFinal(e.target.value)}
-                  className="w-full border rounded px-3 py-2 text-sm bg-gray-50"
-                  rows="2"
-                />
-              </div>
-
+        <div className="fixed inset-0 bg-white z-50 flex flex-col">
+          {/* Header del carrito */}
+          <div className="p-4 border-b shadow-sm" style={{ backgroundColor: '#8F6A50' }}>
+            <div className="flex items-center justify-between">
               <button
-                onClick={generarPedido}
-                disabled={Object.keys(carrito).length === 0}
-                className="w-full text-white py-4 rounded-lg font-bold hover:opacity-90 transition-colors flex items-center justify-center space-x-2 shadow-lg disabled:opacity-50"
-                style={{ backgroundColor: Object.keys(carrito).length === 0 ? '#999999' : '#25D366' }}
+                onClick={() => setMostrarCarrito(false)}
+                className="flex items-center space-x-2 text-white hover:opacity-80 transition-opacity"
               >
-                <Send size={20} />
-                <span>📱 Enviar Pedido por WhatsApp</span>
+                <span className="text-xl">←</span>
+                <span className="text-sm font-medium">Volver al catálogo</span>
               </button>
+              <h2 className="text-xl font-bold text-white">
+                🛒 Mi Pedido
+              </h2>
+              <div className="w-24"></div>
             </div>
           </div>
+          
+          {/* Contenido del carrito */}
+          <div className="flex-1 overflow-y-auto p-4" style={{ backgroundColor: '#E3D4C1' }}>
+            {Object.keys(carrito).length === 0 ? (
+              <div className="text-center py-12">
+                <div className="text-6xl mb-4">🛒</div>
+                <p className="text-xl mb-4" style={{ color: '#8F6A50' }}>Tu carrito está vacío</p>
+                <button
+                  onClick={() => setMostrarCarrito(false)}
+                  className="px-6 py-3 text-white rounded-lg font-medium"
+                  style={{ backgroundColor: '#8F6A50' }}
+                >
+                  Agregar productos
+                </button>
+              </div>
+            ) : (
+              <div className="max-w-2xl mx-auto space-y-4">
+                {Object.entries(carrito).map(([key, item]) => (
+                  <div key={key} className="bg-white rounded-lg p-4 shadow-sm border" style={{ borderColor: '#8F6A50' }}>
+                    {/* Header del producto */}
+                    <div className="flex justify-between items-start mb-3">
+                      <div className="flex-1">
+                        <h3 className="text-lg font-bold" style={{ color: '#8F6A50' }}>
+                          {item.producto.nombre}
+                        </h3>
+                        <p className="text-sm text-gray-600">Código: {item.producto.codigo}</p>
+                        <p className="text-sm" style={{ color: '#8F6A50' }}>
+                          Color: <span className="font-medium">{item.color}</span>
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => eliminarDelCarrito(key)}
+                        className="text-red-500 hover:text-red-700 p-2 rounded"
+                        style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)' }}
+                      >
+                        🗑️
+                      </button>
+                    </div>
+                    
+                    {/* Cantidad y precio */}
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center space-x-3">
+                        <span className="text-sm font-medium" style={{ color: '#8F6A50' }}>Cantidad:</span>
+                        <div className="flex items-center space-x-2">
+                          <button
+                            onClick={() => actualizarCantidad(key, item.cantidad - 1)}
+                            className="w-8 h-8 rounded-full border flex items-center justify-center hover:bg-gray-100"
+                            style={{ borderColor: '#8F6A50' }}
+                          >
+                            <Minus size={14} style={{ color: '#8F6A50' }} />
+                          </button>
+                          
+                          <input
+                            type="number"
+                            min="1"
+                            value={item.cantidad}
+                            onChange={(e) => establecerCantidad(key, e.target.value)}
+                            className="w-16 text-center font-bold border rounded px-2 py-1"
+                            style={{ borderColor: '#8F6A50', color: '#8F6A50' }}
+                          />
+                          
+                          <button
+                            onClick={() => actualizarCantidad(key, item.cantidad + 1)}
+                            className="w-8 h-8 rounded-full border flex items-center justify-center hover:bg-gray-100"
+                            style={{ borderColor: '#8F6A50' }}
+                          >
+                            <Plus size={14} style={{ color: '#8F6A50' }} />
+                          </button>
+                        </div>
+                      </div>
+                      
+                      <div className="text-right">
+                        <p className="text-sm text-gray-600">${item.producto.precio} c/u</p>
+                        <p className="text-xl font-bold" style={{ color: '#8F6A50' }}>
+                          ${item.producto.precio * item.cantidad}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Comentario del producto si existe */}
+                    {comentariosProducto[item.producto.codigo] && (
+                      <div className="mt-3 p-3 rounded border" style={{ backgroundColor: '#F8F6F3', borderColor: '#8F6A50' }}>
+                        <p className="text-xs font-medium mb-1" style={{ color: '#8F6A50' }}>
+                          💬 Comentario:
+                        </p>
+                        <p className="text-sm text-gray-700">
+                          {comentariosProducto[item.producto.codigo]}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          
+          {/* Footer con total y botones */}
+          {Object.keys(carrito).length > 0 && (
+            <div className="bg-white border-t p-4 shadow-lg">
+              <div className="max-w-2xl mx-auto">
+                {/* Total */}
+                <div className="flex justify-between items-center mb-4 py-3 border-t-2" style={{ borderColor: '#8F6A50' }}>
+                  <span className="text-2xl font-bold" style={{ color: '#8F6A50' }}>Total:</span>
+                  <span className="text-3xl font-bold" style={{ color: '#8F6A50' }}>${calcularTotal()}</span>
+                </div>
+                
+                {/* Comentarios adicionales */}
+                <div className="mb-4">
+                  <label className="block text-sm font-medium mb-2" style={{ color: '#8F6A50' }}>
+                    📝 Comentarios adicionales del pedido:
+                  </label>
+                  <textarea
+                    placeholder="Ej: Entregar urgente, horario de recepción, dirección específica..."
+                    value={comentarioFinal}
+                    onChange={(e) => setComentarioFinal(e.target.value)}
+                    className="w-full border rounded-lg px-3 py-3 text-sm resize-none"
+                    style={{ borderColor: '#8F6A50' }}
+                    rows="3"
+                  />
+                </div>
+
+                {/* Botones */}
+                <div className="space-y-3">
+                  <button
+                    onClick={() => setMostrarCarrito(false)}
+                    className="w-full py-3 rounded-lg font-medium border-2 transition-colors"
+                    style={{ borderColor: '#8F6A50', color: '#8F6A50', backgroundColor: 'white' }}
+                  >
+                    ← Seguir comprando
+                  </button>
+                  <button
+                    onClick={generarPedido}
+                    className="w-full text-white py-4 rounded-lg font-bold text-lg hover:opacity-90 transition-colors flex items-center justify-center space-x-3 shadow-lg"
+                    style={{ backgroundColor: '#25D366' }}
+                  >
+                    <Send size={24} />
+                    <span>📱 Enviar Pedido por WhatsApp</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
