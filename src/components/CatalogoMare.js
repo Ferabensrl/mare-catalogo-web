@@ -426,6 +426,60 @@ const CatalogoMare = () => {
                           style={{ borderColor: '#8F6A50', color: '#8F6A50' }}
                         />
                       </div>
+
+                      <div className="mb-3">
+                        <label className="text-sm font-medium mb-2 block" style={{ color: '#8F6A50' }}>
+                          💬 Comentario del producto (opcional):
+                        </label>
+                        <div className="flex space-x-2">
+                          <input
+                            type="text"
+                            placeholder="Ej: Color específico, talle, observaciones..."
+                            id={'comentario-' + producto.codigo}
+                            className="flex-1 text-sm border rounded px-3 py-2 bg-gray-50"
+                            style={{ borderColor: '#8F6A50' }}
+                          />
+                          <button
+                            onClick={() => {
+                              const comentarioInput = document.getElementById('comentario-' + producto.codigo);
+                              const comentario = comentarioInput.value.trim();
+                              if (comentario) {
+                                actualizarComentarioProducto(producto.codigo, comentario);
+                                comentarioInput.value = '';
+                              }
+                            }}
+                            className="px-3 py-2 text-sm font-medium rounded border text-white"
+                            style={{ backgroundColor: '#8F6A50', borderColor: '#8F6A50' }}
+                          >
+                            💬
+                          </button>
+                        </div>
+                      </div>
+
+                      {comentariosProducto[producto.codigo] && (
+                        <div className="mt-3 p-3 rounded border" style={{ backgroundColor: '#E3D4C1', borderColor: '#8F6A50' }}>
+                          <div className="flex justify-between items-start mb-2">
+                            <p className="text-xs font-medium" style={{ color: '#8F6A50' }}>
+                              💬 Comentario guardado:
+                            </p>
+                            <button
+                              onClick={() => actualizarComentarioProducto(producto.codigo, '')}
+                              className="text-red-500 hover:text-red-700 text-xs px-2 py-1 rounded"
+                              style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)' }}
+                            >
+                              🗑️
+                            </button>
+                          </div>
+                          <input
+                            type="text"
+                            value={comentariosProducto[producto.codigo]}
+                            onChange={(e) => actualizarComentarioProducto(producto.codigo, e.target.value)}
+                            className="w-full text-sm border rounded px-3 py-2 bg-white"
+                            style={{ borderColor: '#8F6A50', color: '#8F6A50' }}
+                            placeholder="Edita tu comentario aquí..."
+                          />
+                        </div>
+                      )}
                       
                       <div className="flex flex-wrap gap-2">
                         {!tieneColores ? (
