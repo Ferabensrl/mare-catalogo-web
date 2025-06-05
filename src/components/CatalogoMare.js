@@ -254,26 +254,26 @@ const CatalogoMare = () => {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#E3D4C1' }}>
-      {/* Header - MEJORADO PARA MÓVIL */}
+      {/* Header - Mejorado para móvil */}
       <div className="shadow-lg" style={{ backgroundColor: '#8F6A50' }}>
-        <div className="text-center py-3 text-base" style={{ backgroundColor: '#E3D4C1', color: '#8F6A50' }}>
-          <div className="flex items-center justify-center space-x-4 font-semibold">
-            <span className="text-base">📞 097 998 999</span>
+        <div className="text-center py-2 text-sm" style={{ backgroundColor: '#E3D4C1', color: '#8F6A50' }}>
+          <div className="flex items-center justify-center space-x-4 text-sm font-medium">
+            <span>📞 097 998 999</span>
             <span>•</span>
-            <span className="text-base">By Feraben SRL</span>
+            <span>By Feraben SRL</span>
             <span>•</span>
-            <span className="text-base">✉️ ferabensrl@gmail.com</span>
+            <span>✉️ ferabensrl@gmail.com</span>
           </div>
         </div>
         
-        <div className="p-6 text-white">
+        <div className="p-4 text-white">
           <div className="flex items-center justify-between">
             <div className="text-center flex-1">
-              <h1 className="text-4xl font-bold tracking-wider font-serif">
+              <h1 className="text-2xl md:text-3xl font-bold tracking-wider font-serif">
                 MARÉ
               </h1>
-              <p className="text-lg opacity-90 mt-2">Tu estilo en cada detalle</p>
-              <div className="text-base opacity-80 flex items-center justify-center space-x-3 mt-3 flex-wrap">
+              <p className="text-sm md:text-base opacity-90 mt-1">Tu estilo en cada detalle</p>
+              <div className="text-sm opacity-80 flex items-center justify-center space-x-3 mt-2">
                 <span>@mare_uy</span>
                 <span>•</span>
                 <span>🔄 Conectado a GitHub</span>
@@ -283,12 +283,12 @@ const CatalogoMare = () => {
             </div>
             <button
               onClick={() => setMostrarCarrito(!mostrarCarrito)}
-              className="relative p-4 rounded-full hover:bg-white/20 transition-colors"
-              style={{ backgroundColor: 'rgba(255,255,255,0.1)', minHeight: '56px', minWidth: '56px' }}
+              className="relative p-3 rounded-full hover:bg-white/20 transition-colors"
+              style={{ backgroundColor: 'rgba(255,255,255,0.1)' }}
             >
-              <ShoppingCart size={28} />
+              <ShoppingCart size={24} />
               {cantidadItems > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-sm rounded-full w-7 h-7 flex items-center justify-center font-bold">
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-sm rounded-full w-6 h-6 flex items-center justify-center font-bold">
                   {cantidadItems}
                 </span>
               )}
@@ -297,29 +297,29 @@ const CatalogoMare = () => {
         </div>
       </div>
 
-      {/* Búsqueda - MEJORADA */}
-      <div className="p-6">
+      {/* Búsqueda - Mejorada */}
+      <div className="p-4">
         <div className="relative">
-          <Search className="absolute left-4 top-1/2 transform -translate-y-1/2" size={24} style={{ color: '#8F6A50' }} />
+          <Search className="absolute left-4 top-4" size={20} style={{ color: '#8F6A50' }} />
           <input
             type="text"
             placeholder="Buscar productos o códigos..."
             value={busqueda}
             onChange={(e) => setBusqueda(e.target.value)}
-            className="w-full pl-14 pr-6 py-5 text-lg border-2 border-gray-300 rounded-2xl focus:ring-2 focus:border-transparent bg-white shadow-sm"
-            style={{ fontSize: '18px', minHeight: '60px' }}
+            className="w-full pl-12 pr-4 py-4 text-base border border-gray-300 rounded-xl focus:ring-2 focus:border-transparent bg-white shadow-sm"
+            style={{ fontSize: '16px' }}
           />
         </div>
       </div>
 
-      {/* Categorías - BOTONES MÁS GRANDES */}
-      <div className="px-6 pb-6">
-        <div className="flex overflow-x-auto space-x-4 pb-2">
+      {/* Categorías - Botones más grandes */}
+      <div className="px-4 pb-4">
+        <div className="flex overflow-x-auto space-x-3 pb-2">
           {categorias.map(categoria => (
             <button
               key={categoria.id}
               onClick={() => setCategoriaActiva(categoria.id)}
-              className={`px-6 py-4 rounded-2xl whitespace-nowrap transition-colors text-lg font-bold shadow-sm ${
+              className={`px-5 py-3 rounded-full whitespace-nowrap transition-colors text-base font-semibold shadow-sm ${
                 categoriaActiva === categoria.id 
                   ? 'text-white' 
                   : 'bg-white'
@@ -327,7 +327,7 @@ const CatalogoMare = () => {
               style={{
                 backgroundColor: categoriaActiva === categoria.id ? '#8F6A50' : 'white',
                 color: categoriaActiva === categoria.id ? 'white' : '#8F6A50',
-                minHeight: '56px'
+                minHeight: '44px'
               }}
             >
               {categoria.nombre}
@@ -336,26 +336,29 @@ const CatalogoMare = () => {
         </div>
       </div>
 
-      {/* Productos - GRID OPTIMIZADO */}
-      <div className="px-6 pb-10">
+      {/* Productos - Layout optimizado */}
+      <div className="px-4 pb-10">
         {productosFiltrados.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-2xl text-gray-600">No se encontraron productos</p>
+            <p className="text-xl text-gray-600">No se encontraron productos</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {productosFiltrados.map(producto => {
               const tieneColores = producto.colores && producto.colores.length > 0;
               
               return (
-                <div key={producto.codigo} className="bg-white rounded-3xl shadow-xl overflow-hidden border-2 border-gray-100">
+                <div key={producto.codigo} className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
                   {/* CARRUSEL DE IMÁGENES */}
                   <div className="relative">
                     <img
                       src={producto.imagenes[imagenesActivas[producto.codigo] || 0]}
                       alt={producto.nombre}
                       className="w-full object-cover"
-                      style={{ height: '280px' }}
+                      style={{ 
+                        height: window.innerWidth < 640 ? '200px' : 
+                               window.innerWidth < 1024 ? '240px' : '280px' 
+                      }}
                       onError={(e) => {
                         const currentSrc = e.target.src;
                         if (currentSrc.includes('.jpg')) {
@@ -370,12 +373,12 @@ const CatalogoMare = () => {
                     
                     {/* Indicadores de imágenes */}
                     {producto.imagenes.length > 1 && (
-                      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                      <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex space-x-2">
                         {producto.imagenes.map((_, indice) => (
                           <button
                             key={indice}
                             onClick={() => cambiarImagen(producto.codigo, indice)}
-                            className={`w-4 h-4 rounded-full transition-colors ${
+                            className={`w-3 h-3 rounded-full transition-colors ${
                               (imagenesActivas[producto.codigo] || 0) === indice ? 'bg-white' : 'bg-white/50'
                             }`}
                             style={{
@@ -388,43 +391,43 @@ const CatalogoMare = () => {
 
                     {/* Contador de imágenes */}
                     {producto.imagenes.length > 1 && (
-                      <div className="absolute top-4 right-4 bg-black/60 text-white text-base px-4 py-2 rounded-full font-semibold">
+                      <div className="absolute top-3 right-3 bg-black/60 text-white text-sm px-3 py-1 rounded-full font-medium">
                         {(imagenesActivas[producto.codigo] || 0) + 1}/{producto.imagenes.length}
                       </div>
                     )}
                   </div>
                   
-                  <div className="p-6">
-                    <div className="flex justify-between items-start mb-4">
-                      <h3 className="font-bold text-2xl leading-tight" style={{ color: '#8F6A50' }}>
+                  <div className="p-5">
+                    <div className="flex justify-between items-start mb-3">
+                      <h3 className="font-bold text-xl leading-tight" style={{ color: '#8F6A50' }}>
                         {producto.nombre}
                       </h3>
-                      <span className="text-base px-4 py-2 rounded-full font-semibold" style={{ backgroundColor: '#E3D4C1', color: '#8F6A50' }}>
+                      <span className="text-sm px-3 py-1 rounded-full font-medium" style={{ backgroundColor: '#E3D4C1', color: '#8F6A50' }}>
                         {producto.codigo}
                       </span>
                     </div>
 
                     {producto.descripcion && producto.descripcion !== producto.nombre && (
-                      <p className="text-lg text-gray-600 mb-4">📝 {producto.descripcion}</p>
+                      <p className="text-base text-gray-600 mb-3">📝 {producto.descripcion}</p>
                     )}
                     
                     {producto.medidas && (
-                      <p className="text-lg text-gray-600 mb-4">📏 {producto.medidas}</p>
+                      <p className="text-base text-gray-600 mb-3">📏 {producto.medidas}</p>
                     )}
                     
-                    <p className="text-4xl font-bold mb-6" style={{ color: '#8F6A50' }}>
+                    <p className="text-3xl font-bold mb-4" style={{ color: '#8F6A50' }}>
                       ${producto.precio}
                     </p>
                     
-                    <div className="space-y-6">
+                    <div className="space-y-4">
                       {tieneColores && (
-                        <p className="text-lg font-bold" style={{ color: '#8F6A50' }}>
+                        <p className="text-base font-semibold" style={{ color: '#8F6A50' }}>
                           Colores disponibles:
                         </p>
                       )}
                       
-                      <div className="flex items-center space-x-4 mb-6">
-                        <label className="text-lg font-bold" style={{ color: '#8F6A50' }}>
+                      <div className="flex items-center space-x-3 mb-4">
+                        <label className="text-base font-semibold" style={{ color: '#8F6A50' }}>
                           Cantidad:
                         </label>
                         <input
@@ -432,22 +435,22 @@ const CatalogoMare = () => {
                           min="1"
                           defaultValue="1"
                           id={'cantidad-' + producto.codigo}
-                          className="w-24 text-center border-2 rounded-xl px-4 py-3 text-xl font-bold"
-                          style={{ borderColor: '#8F6A50', color: '#8F6A50', fontSize: '18px', minHeight: '56px' }}
+                          className="w-20 text-center border-2 rounded-lg px-3 py-2 text-lg font-semibold"
+                          style={{ borderColor: '#8F6A50', color: '#8F6A50', fontSize: '16px' }}
                         />
                       </div>
 
-                      <div className="mb-6">
-                        <label className="text-lg font-bold mb-4 block" style={{ color: '#8F6A50' }}>
+                      <div className="mb-4">
+                        <label className="text-base font-semibold mb-3 block" style={{ color: '#8F6A50' }}>
                           💬 Comentario del producto (opcional):
                         </label>
-                        <div className="flex space-x-3">
+                        <div className="flex space-x-2">
                           <input
                             type="text"
                             placeholder="Ej: Color específico, talle, observaciones..."
                             id={'comentario-' + producto.codigo}
-                            className="flex-1 text-lg border-2 rounded-xl px-4 py-4 bg-gray-50"
-                            style={{ borderColor: '#8F6A50', fontSize: '18px', minHeight: '56px' }}
+                            className="flex-1 text-base border-2 rounded-lg px-4 py-3 bg-gray-50"
+                            style={{ borderColor: '#8F6A50', fontSize: '16px' }}
                           />
                           <button
                             onClick={() => {
@@ -458,8 +461,8 @@ const CatalogoMare = () => {
                                 comentarioInput.value = '';
                               }
                             }}
-                            className="px-6 py-4 text-lg font-bold rounded-xl border-2 text-white"
-                            style={{ backgroundColor: '#8F6A50', borderColor: '#8F6A50', minWidth: '80px', minHeight: '56px' }}
+                            className="px-4 py-3 text-base font-semibold rounded-lg border-2 text-white min-w-[60px]"
+                            style={{ backgroundColor: '#8F6A50', borderColor: '#8F6A50' }}
                           >
                             💬
                           </button>
@@ -467,15 +470,15 @@ const CatalogoMare = () => {
                       </div>
 
                       {comentariosProducto[producto.codigo] && (
-                        <div className="mt-6 p-5 rounded-2xl border-2" style={{ backgroundColor: '#E3D4C1', borderColor: '#8F6A50' }}>
-                          <div className="flex justify-between items-start mb-4">
-                            <p className="text-base font-bold" style={{ color: '#8F6A50' }}>
+                        <div className="mt-4 p-4 rounded-xl border-2" style={{ backgroundColor: '#E3D4C1', borderColor: '#8F6A50' }}>
+                          <div className="flex justify-between items-start mb-3">
+                            <p className="text-sm font-semibold" style={{ color: '#8F6A50' }}>
                               💬 Comentario guardado:
                             </p>
                             <button
                               onClick={() => actualizarComentarioProducto(producto.codigo, '')}
-                              className="text-red-500 hover:text-red-700 text-base px-4 py-2 rounded-xl font-semibold"
-                              style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)', minHeight: '44px' }}
+                              className="text-red-500 hover:text-red-700 text-sm px-3 py-1 rounded-lg font-medium"
+                              style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)' }}
                             >
                               🗑️
                             </button>
@@ -484,14 +487,14 @@ const CatalogoMare = () => {
                             type="text"
                             value={comentariosProducto[producto.codigo]}
                             onChange={(e) => actualizarComentarioProducto(producto.codigo, e.target.value)}
-                            className="w-full text-lg border-2 rounded-xl px-4 py-4 bg-white"
-                            style={{ borderColor: '#8F6A50', color: '#8F6A50', fontSize: '18px', minHeight: '56px' }}
+                            className="w-full text-base border-2 rounded-lg px-4 py-3 bg-white"
+                            style={{ borderColor: '#8F6A50', color: '#8F6A50', fontSize: '16px' }}
                             placeholder="Edita tu comentario aquí..."
                           />
                         </div>
                       )}
                       
-                      <div className="flex flex-wrap gap-4">
+                      <div className="flex flex-wrap gap-3">
                         {!tieneColores ? (
                           // Para productos sin colores
                           <button
@@ -501,8 +504,8 @@ const CatalogoMare = () => {
                               agregarAlCarrito(producto.codigo, 'ÚNICO', cantidad);
                               cantidadInput.value = '1';
                             }}
-                            className="w-full px-8 py-5 rounded-2xl text-xl font-bold transition-colors hover:shadow-lg border-2 text-white"
-                            style={{ backgroundColor: '#8F6A50', borderColor: '#8F6A50', minHeight: '64px' }}
+                            className="px-6 py-4 rounded-full text-base font-bold transition-colors hover:shadow-lg border-2 text-white w-full"
+                            style={{ backgroundColor: '#8F6A50', borderColor: '#8F6A50', minHeight: '52px' }}
                           >
                             + AGREGAR AL CARRITO
                           </button>
@@ -516,8 +519,8 @@ const CatalogoMare = () => {
                                 agregarAlCarrito(producto.codigo, 'SURTIDO', cantidad);
                                 cantidadInput.value = '1';
                               }}
-                              className="px-6 py-4 rounded-2xl text-lg font-bold transition-colors hover:shadow-lg border-2 text-white"
-                              style={{ backgroundColor: '#8F6A50', borderColor: '#8F6A50', minHeight: '56px' }}
+                              className="px-5 py-3 rounded-full text-base font-bold transition-colors hover:shadow-lg border-2 text-white"
+                              style={{ backgroundColor: '#8F6A50', borderColor: '#8F6A50', minHeight: '48px' }}
                             >
                               + SURTIDO
                             </button>
@@ -531,12 +534,12 @@ const CatalogoMare = () => {
                                   agregarAlCarrito(producto.codigo, color, cantidad);
                                   cantidadInput.value = '1';
                                 }}
-                                className="px-5 py-4 rounded-2xl text-lg font-bold transition-colors hover:shadow-md border-2"
+                                className="px-4 py-3 rounded-full text-base font-semibold transition-colors hover:shadow-md border-2"
                                 style={{ 
                                   backgroundColor: '#E3D4C1', 
                                   color: '#8F6A50',
                                   borderColor: '#8F6A50',
-                                  minHeight: '56px'
+                                  minHeight: '48px'
                                 }}
                               >
                                 + {color}
@@ -547,38 +550,35 @@ const CatalogoMare = () => {
                       </div>
                       
                       {Object.entries(carrito).some(([key]) => key.startsWith(producto.codigo)) && (
-                        <div className="mt-6 p-5 rounded-2xl border-2" style={{ backgroundColor: '#E3D4C1', borderColor: '#8F6A50' }}>
-                          <p className="text-lg font-bold mb-4" style={{ color: '#8F6A50' }}>
+                        <div className="mt-4 p-4 rounded-xl border-2" style={{ backgroundColor: '#E3D4C1', borderColor: '#8F6A50' }}>
+                          <p className="text-base font-bold mb-3" style={{ color: '#8F6A50' }}>
                             🛒 En tu carrito:
                           </p>
                           {Object.entries(carrito)
                             .filter(([key]) => key.startsWith(producto.codigo))
                             .map(([key, item]) => (
-                              <div key={key} className="flex items-center justify-between mb-4 p-4 bg-white rounded-xl">
+                              <div key={key} className="flex items-center justify-between mb-3 p-3 bg-white rounded-lg">
                                 <div className="flex-1">
-                                  <span className="text-lg font-bold" style={{ color: '#8F6A50' }}>
+                                  <span className="text-base font-semibold" style={{ color: '#8F6A50' }}>
                                     {item.color}: {item.cantidad} unidades
                                   </span>
                                 </div>
-                                <div className="flex items-center space-x-3">
+                                <div className="flex items-center space-x-2">
                                   <button
                                     onClick={() => actualizarCantidad(key, item.cantidad - 1)}
-                                    className="p-3 text-red-500 hover:bg-red-100 rounded-xl text-lg font-bold"
-                                    style={{ minHeight: '48px', minWidth: '48px' }}
+                                    className="p-2 text-red-500 hover:bg-red-100 rounded-lg text-base"
                                   >
                                     -
                                   </button>
                                   <button
                                     onClick={() => actualizarCantidad(key, item.cantidad + 1)}
-                                    className="p-3 text-green-500 hover:bg-green-100 rounded-xl text-lg font-bold"
-                                    style={{ minHeight: '48px', minWidth: '48px' }}
+                                    className="p-2 text-green-500 hover:bg-green-100 rounded-lg text-base"
                                   >
                                     +
                                   </button>
                                   <button
                                     onClick={() => eliminarDelCarrito(key)}
-                                    className="p-3 text-red-500 hover:bg-red-100 rounded-xl text-lg font-bold ml-2"
-                                    style={{ minHeight: '48px', minWidth: '48px' }}
+                                    className="p-2 text-red-500 hover:bg-red-100 rounded-lg text-base ml-2"
                                   >
                                     🗑️
                                   </button>
@@ -596,60 +596,59 @@ const CatalogoMare = () => {
         )}
       </div>
 
-      {/* Modal del Carrito - OPTIMIZADO */}
+      {/* Modal del Carrito - Optimizado */}
       {mostrarCarrito && (
         <div className="fixed inset-0 bg-white z-50 flex flex-col">
           {/* Header del carrito */}
-          <div className="p-6 border-b shadow-sm" style={{ backgroundColor: '#8F6A50' }}>
+          <div className="p-4 border-b shadow-sm" style={{ backgroundColor: '#8F6A50' }}>
             <div className="flex items-center justify-between">
               <button
                 onClick={() => setMostrarCarrito(false)}
-                className="flex items-center space-x-4 text-white hover:opacity-80 transition-opacity"
-                style={{ minHeight: '56px' }}
+                className="flex items-center space-x-3 text-white hover:opacity-80 transition-opacity"
               >
-                <span className="text-3xl">←</span>
-                <span className="text-xl font-bold">Volver al catálogo</span>
+                <span className="text-2xl">←</span>
+                <span className="text-base font-semibold">Volver al catálogo</span>
               </button>
-              <h2 className="text-3xl font-bold text-white">
+              <h2 className="text-2xl font-bold text-white">
                 🛒 Mi Pedido
               </h2>
-              <div className="w-32"></div>
+              <div className="w-24"></div>
             </div>
           </div>
           
           {/* Contenido del carrito */}
-          <div className="flex-1 overflow-y-auto p-6" style={{ backgroundColor: '#E3D4C1' }}>
+          <div className="flex-1 overflow-y-auto p-4" style={{ backgroundColor: '#E3D4C1' }}>
             {Object.keys(carrito).length === 0 ? (
-              <div className="text-center py-20">
-                <div className="text-9xl mb-8">🛒</div>
-                <p className="text-3xl mb-8 font-bold" style={{ color: '#8F6A50' }}>Tu carrito está vacío</p>
+              <div className="text-center py-16">
+                <div className="text-8xl mb-6">🛒</div>
+                <p className="text-2xl mb-6 font-semibold" style={{ color: '#8F6A50' }}>Tu carrito está vacío</p>
                 <button
                   onClick={() => setMostrarCarrito(false)}
-                  className="px-10 py-5 text-white rounded-2xl font-bold text-xl"
-                  style={{ backgroundColor: '#8F6A50', minHeight: '64px' }}
+                  className="px-8 py-4 text-white rounded-xl font-bold text-lg"
+                  style={{ backgroundColor: '#8F6A50' }}
                 >
                   Agregar productos
                 </button>
               </div>
             ) : (
-              <div className="max-w-2xl mx-auto space-y-6">
+              <div className="max-w-2xl mx-auto space-y-5">
                 {Object.entries(carrito).map(([key, item]) => (
-                  <div key={key} className="bg-white rounded-2xl p-6 shadow-xl border-2" style={{ borderColor: '#8F6A50' }}>
+                  <div key={key} className="bg-white rounded-2xl p-5 shadow-lg border-2" style={{ borderColor: '#8F6A50' }}>
                     {/* Header del producto */}
-                    <div className="flex justify-between items-start mb-5">
+                    <div className="flex justify-between items-start mb-4">
                       <div className="flex-1">
-                        <h3 className="text-2xl font-bold" style={{ color: '#8F6A50' }}>
+                        <h3 className="text-xl font-bold" style={{ color: '#8F6A50' }}>
                           {item.producto.nombre}
                         </h3>
-                        <p className="text-lg text-gray-600 mt-2">Código: {item.producto.codigo}</p>
-                        <p className="text-lg mt-1" style={{ color: '#8F6A50' }}>
-                          Color: <span className="font-bold">{item.color}</span>
+                        <p className="text-base text-gray-600 mt-1">Código: {item.producto.codigo}</p>
+                        <p className="text-base mt-1" style={{ color: '#8F6A50' }}>
+                          Color: <span className="font-semibold">{item.color}</span>
                         </p>
                       </div>
                       <button
                         onClick={() => eliminarDelCarrito(key)}
-                        className="text-red-500 hover:text-red-700 p-4 rounded-2xl font-bold text-xl"
-                        style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)', minHeight: '56px', minWidth: '56px' }}
+                        className="text-red-500 hover:text-red-700 p-3 rounded-xl font-bold text-lg"
+                        style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)' }}
                       >
                         🗑️
                       </button>
@@ -657,15 +656,15 @@ const CatalogoMare = () => {
                     
                     {/* Cantidad y precio */}
                     <div className="flex justify-between items-center">
-                      <div className="flex items-center space-x-5">
-                        <span className="text-xl font-bold" style={{ color: '#8F6A50' }}>Cantidad:</span>
-                        <div className="flex items-center space-x-4">
+                      <div className="flex items-center space-x-4">
+                        <span className="text-base font-semibold" style={{ color: '#8F6A50' }}>Cantidad:</span>
+                        <div className="flex items-center space-x-3">
                           <button
                             onClick={() => actualizarCantidad(key, item.cantidad - 1)}
-                            className="w-12 h-12 rounded-full border-2 flex items-center justify-center hover:bg-gray-100"
+                            className="w-10 h-10 rounded-full border-2 flex items-center justify-center hover:bg-gray-100"
                             style={{ borderColor: '#8F6A50' }}
                           >
-                            <Minus size={20} style={{ color: '#8F6A50' }} />
+                            <Minus size={18} style={{ color: '#8F6A50' }} />
                           </button>
                           
                           <input
@@ -673,23 +672,23 @@ const CatalogoMare = () => {
                             min="1"
                             value={item.cantidad}
                             onChange={(e) => establecerCantidad(key, e.target.value)}
-                            className="w-24 text-center font-bold border-2 rounded-xl px-4 py-3 text-xl"
-                            style={{ borderColor: '#8F6A50', color: '#8F6A50', fontSize: '20px', minHeight: '56px' }}
+                            className="w-20 text-center font-bold border-2 rounded-lg px-3 py-2 text-lg"
+                            style={{ borderColor: '#8F6A50', color: '#8F6A50', fontSize: '18px' }}
                           />
                           
                           <button
                             onClick={() => actualizarCantidad(key, item.cantidad + 1)}
-                            className="w-12 h-12 rounded-full border-2 flex items-center justify-center hover:bg-gray-100"
+                            className="w-10 h-10 rounded-full border-2 flex items-center justify-center hover:bg-gray-100"
                             style={{ borderColor: '#8F6A50' }}
                           >
-                            <Plus size={20} style={{ color: '#8F6A50' }} />
+                            <Plus size={18} style={{ color: '#8F6A50' }} />
                           </button>
                         </div>
                       </div>
                       
                       <div className="text-right">
-                        <p className="text-lg text-gray-600">${item.producto.precio} c/u</p>
-                        <p className="text-3xl font-bold" style={{ color: '#8F6A50' }}>
+                        <p className="text-base text-gray-600">${item.producto.precio} c/u</p>
+                        <p className="text-2xl font-bold" style={{ color: '#8F6A50' }}>
                           ${item.producto.precio * item.cantidad}
                         </p>
                       </div>
@@ -697,11 +696,11 @@ const CatalogoMare = () => {
 
                     {/* Comentario del producto si existe */}
                     {comentariosProducto[item.producto.codigo] && (
-                      <div className="mt-5 p-5 rounded-2xl border-2" style={{ backgroundColor: '#F8F6F3', borderColor: '#8F6A50' }}>
-                        <p className="text-base font-bold mb-3" style={{ color: '#8F6A50' }}>
+                      <div className="mt-4 p-4 rounded-xl border-2" style={{ backgroundColor: '#F8F6F3', borderColor: '#8F6A50' }}>
+                        <p className="text-sm font-semibold mb-2" style={{ color: '#8F6A50' }}>
                           💬 Comentario:
                         </p>
-                        <p className="text-lg text-gray-700">
+                        <p className="text-base text-gray-700">
                           {comentariosProducto[item.producto.codigo]}
                         </p>
                       </div>
@@ -714,44 +713,44 @@ const CatalogoMare = () => {
           
           {/* Footer con total y botones */}
           {Object.keys(carrito).length > 0 && (
-            <div className="bg-white border-t p-6 shadow-lg">
+            <div className="bg-white border-t p-5 shadow-lg">
               <div className="max-w-2xl mx-auto">
                 {/* Total */}
-                <div className="flex justify-between items-center mb-8 py-5 border-t-2" style={{ borderColor: '#8F6A50' }}>
-                  <span className="text-4xl font-bold" style={{ color: '#8F6A50' }}>Total:</span>
-                  <span className="text-5xl font-bold" style={{ color: '#8F6A50' }}>${calcularTotal()}</span>
+                <div className="flex justify-between items-center mb-5 py-4 border-t-2" style={{ borderColor: '#8F6A50' }}>
+                  <span className="text-3xl font-bold" style={{ color: '#8F6A50' }}>Total:</span>
+                  <span className="text-4xl font-bold" style={{ color: '#8F6A50' }}>${calcularTotal()}</span>
                 </div>
                 
                 {/* Comentarios adicionales */}
-                <div className="mb-8">
-                  <label className="block text-xl font-bold mb-4" style={{ color: '#8F6A50' }}>
+                <div className="mb-5">
+                  <label className="block text-base font-semibold mb-3" style={{ color: '#8F6A50' }}>
                     📝 Comentarios adicionales del pedido:
                   </label>
                   <textarea
                     placeholder="Ej: Entregar urgente, horario de recepción, dirección específica..."
                     value={comentarioFinal}
                     onChange={(e) => setComentarioFinal(e.target.value)}
-                    className="w-full border-2 rounded-2xl px-5 py-5 text-lg resize-none"
-                    style={{ borderColor: '#8F6A50', fontSize: '18px', minHeight: '80px' }}
+                    className="w-full border-2 rounded-xl px-4 py-4 text-base resize-none"
+                    style={{ borderColor: '#8F6A50', fontSize: '16px' }}
                     rows="4"
                   />
                 </div>
 
                 {/* Botones */}
-                <div className="space-y-5">
+                <div className="space-y-4">
                   <button
                     onClick={() => setMostrarCarrito(false)}
-                    className="w-full py-5 rounded-2xl font-bold text-xl border-2 transition-colors"
-                    style={{ borderColor: '#8F6A50', color: '#8F6A50', backgroundColor: 'white', minHeight: '64px' }}
+                    className="w-full py-4 rounded-xl font-bold text-lg border-2 transition-colors"
+                    style={{ borderColor: '#8F6A50', color: '#8F6A50', backgroundColor: 'white' }}
                   >
                     ← Seguir comprando
                   </button>
                   <button
                     onClick={generarPedido}
-                    className="w-full text-white py-6 rounded-2xl font-bold text-2xl hover:opacity-90 transition-colors flex items-center justify-center space-x-5 shadow-lg"
-                    style={{ backgroundColor: '#25D366', minHeight: '72px' }}
+                    className="w-full text-white py-5 rounded-xl font-bold text-xl hover:opacity-90 transition-colors flex items-center justify-center space-x-4 shadow-lg"
+                    style={{ backgroundColor: '#25D366' }}
                   >
-                    <Send size={32} />
+                    <Send size={28} />
                     <span>📱 Enviar Pedido por WhatsApp</span>
                   </button>
                 </div>
