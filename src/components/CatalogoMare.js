@@ -568,8 +568,560 @@ const CatalogoMare = () => {
         mensaje += '  Cantidad: ' + totalCantidad + '\n';
       }
       
-      mensaje += '  Precio unitario:  + grupo.producto.precio + '\n';
-      mensaje += '  Subtotal:  + grupo.totalProducto + '\n';
+      mensaje += '  Precio unitario: 
+      
+      const comentario = comentariosProducto[grupo.producto.codigo];
+      if (comentario && comentario.trim()) {
+        mensaje += '  COMENTARIO: ' + comentario + '\n';
+      }
+      mensaje += '\n';
+    });
+
+    mensaje += 'TOTAL PEDIDO:  + calcularTotal() + '\n\n';
+    
+    if (comentarioFinal && comentarioFinal.trim()) {
+      mensaje += 'COMENTARIOS ADICIONALES:\n' + comentarioFinal + '\n\n';
+    }
+    
+    mensaje += 'Pedido enviado desde Catalogo MARE\nBy Feraben SRL';
+
+    const numeroWhatsapp = '59897998999';
+    const mensajeCorto = mensaje.length > 1800 ? 
+      mensaje.substring(0, 1600) + '\n...(mensaje truncado)\n\nTotal:  + calcularTotal() :
+      mensaje;
+    
+    const url = 'https://wa.me/' + numeroWhatsapp + '?text=' + encodeURIComponent(mensajeCorto);
+    window.open(url, '_blank');
+
+    setCarrito({});
+    setComentarioFinal('');
+    setComentariosProducto({});
+    setMostrarCarrito(false);
+  };
+
+  const cantidadItems = Object.values(carrito).reduce((total, item) => total + item.cantidad, 0);
+
+  // Componente de carga
+  if (cargando) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-mare-beige">
+        <div className="text-center">
+          <Loader className="animate-spin mx-auto mb-4 text-mare-brown" size={isMobile ? 40 : 48} />
+          <h2 className="text-xl sm:text-2xl font-bold mb-2 text-mare-brown">
+            Cargando catálogo...
+          </h2>
+          <p className="text-sm sm:text-base opacity-80 text-mare-brown">
+            Sincronizando desde GitHub
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Componente de error
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-mare-beige">
+        <div className="text-center p-6 sm:p-8 bg-white rounded-lg sm:rounded-2xl shadow-lg max-w-md mx-4">
+          <AlertCircle className="mx-auto mb-4 text-red-500" size={isMobile ? 40 : 48} />
+          <h2 className="text-xl sm:text-2xl font-bold mb-2 text-red-600">Error al cargar</h2>
+          <p className="text-gray-600 mb-4 text-sm sm:text-base">{error}</p>
+          <button
+            onClick={cargarDatos}
+            className="px-6 sm:px-8 py-3 sm:py-4 text-white rounded-lg sm:rounded-xl hover:opacity-90 bg-mare-brown text-sm sm:text-base font-semibold touch-manipulation"
+          >
+            Reintentar
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-mare-beige">
+      <Header 
+        productos={productos}
+        cantidadItems={cantidadItems}
+        onToggleCarrito={() => setMostrarCarrito(!mostrarCarrito)}
+      />
+
+      <SearchBar 
+        busqueda={busqueda}
+        onBusquedaChange={setBusqueda}
+      />
+
+      <CategoryTabs 
+        categorias={categorias}
+        categoriaActiva={categoriaActiva}
+        onCategoriaChange={setCategoriaActiva}
+      />
+
+      {/* Grid de Productos */}
+      <div className="px-4 sm:px-6 pb-10 sm:pb-16">
+        {productosFiltrados.length === 0 ? (
+          <div className="text-center py-12 sm:py-16">
+            <p className="text-xl sm:text-2xl text-gray-600">No se encontraron productos</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8">
+            {productosFiltrados.map(producto => (
+              <ProductCard
+                key={producto.codigo}
+                producto={producto}
+                imagenesActivas={imagenesActivas}
+                carrito={carrito}
+                comentariosProducto={comentariosProducto}
+                onCambiarImagen={cambiarImagen}
+                onAgregarCarrito={agregarAlCarrito}
+                onActualizarCantidad={actualizarCantidad}
+                onEliminarDelCarrito={eliminarDelCarrito}
+                onActualizarComentario={actualizarComentarioProducto}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Modal del Carrito */}
+      {mostrarCarrito && (
+        <div className="fixed inset-0 bg-white z-50 flex flex-col">
+          {/* Header del carrito */}
+          <div className="p-4 sm:p-6 border-b shadow-sm bg-mare-brown">
+            <div className="flex items-center justify-between">
+              <button
+                onClick={() => setMostrarCarrito(false)}
+                className="flex items-center space-x-2 sm:space-x-3 text-white hover:opacity-80 transition-opacity touch-manipulation min-h-touch"
+              >
+                <span className="text-xl sm:text-2xl">←</span>
+                <span className="text-sm sm:text-base lg:text-lg font-semibold">Volver al catálogo</span>
+              </button>
+              <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">
+                🛒 Mi Pedido
+              </h2>
+              <div className="w-16 sm:w-24"></div>
+            </div>
+          </div>
+          
+          {/* Contenido del carrito */}
+          <div className="flex-1 overflow-y-auto p-4 sm:p-6 bg-mare-beige">
+            {Object.keys(carrito).length === 0 ? (
+              <div className="text-center py-12 sm:py-16">
+                <div className="text-6xl sm:text-8xl mb-6">🛒</div>
+                <p className="text-xl sm:text-2xl lg:text-3xl mb-6 font-semibold text-mare-brown">Tu carrito está vacío</p>
+                <button
+                  onClick={() => setMostrarCarrito(false)}
+                  className="px-6 sm:px-8 py-3 sm:py-4 text-white rounded-xl sm:rounded-2xl font-bold text-base sm:text-lg bg-mare-brown hover:bg-mare-brown/90 transition-colors touch-manipulation"
+                >
+                  Agregar productos
+                </button>
+              </div>
+            ) : (
+              <div className="max-w-2xl mx-auto space-y-4 sm:space-y-6">
+                {Object.entries(carrito).map(([key, item]) => (
+                  <div key={key} className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-lg border-2 border-mare-brown">
+                    {/* Header del producto */}
+                    <div className="flex justify-between items-start mb-3 sm:mb-4">
+                      <div className="flex-1">
+                        <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-mare-brown">
+                          {item.producto.nombre}
+                        </h3>
+                        <p className="text-sm sm:text-base text-gray-600 mt-1">Código: {item.producto.codigo}</p>
+                        <p className="text-sm sm:text-base mt-1 text-mare-brown">
+                          Color: <span className="font-semibold">{item.color}</span>
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => eliminarDelCarrito(key)}
+                        className="text-red-500 hover:text-red-700 p-2 sm:p-3 rounded-xl font-bold text-base sm:text-lg bg-red-100 hover:bg-red-200 transition-colors touch-manipulation min-h-touch"
+                      >
+                        🗑️
+                      </button>
+                    </div>
+                    
+                    {/* Cantidad y precio */}
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center space-x-3 sm:space-x-4">
+                        <span className="text-sm sm:text-base lg:text-lg font-semibold text-mare-brown">Cantidad:</span>
+                        <div className="flex items-center space-x-2 sm:space-x-3">
+                          <button
+                            onClick={() => actualizarCantidad(key, item.cantidad - 1)}
+                            className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-mare-brown flex items-center justify-center hover:bg-gray-100 touch-manipulation"
+                          >
+                            <Minus size={isMobile ? 14 : 18} className="text-mare-brown" />
+                          </button>
+                          
+                          <input
+                            type="number"
+                            min="1"
+                            value={item.cantidad}
+                            onChange={(e) => establecerCantidad(key, e.target.value)}
+                            className="w-16 sm:w-20 text-center font-bold border-2 border-mare-brown rounded-lg sm:rounded-xl px-2 sm:px-3 py-1 sm:py-2 text-base sm:text-lg text-mare-brown touch-manipulation"
+                            style={{ fontSize: '16px' }}
+                          />
+                          
+                          <button
+                            onClick={() => actualizarCantidad(key, item.cantidad + 1)}
+                            className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-mare-brown flex items-center justify-center hover:bg-gray-100 touch-manipulation"
+                          >
+                            <Plus size={isMobile ? 14 : 18} className="text-mare-brown" />
+                          </button>
+                        </div>
+                      </div>
+                      
+                      <div className="text-right">
+                        <p className="text-sm sm:text-base text-gray-600">${item.producto.precio} c/u</p>
+                        <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-mare-brown">
+                          ${item.producto.precio * item.cantidad}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Comentario del producto si existe */}
+                    {comentariosProducto[item.producto.codigo] && (
+                      <div className="mt-3 sm:mt-4 p-3 sm:p-4 rounded-xl sm:rounded-2xl border-2 border-mare-brown bg-mare-light">
+                        <p className="text-xs sm:text-sm font-semibold mb-1 sm:mb-2 text-mare-brown">
+                          💬 Comentario:
+                        </p>
+                        <p className="text-sm sm:text-base text-gray-700">
+                          {comentariosProducto[item.producto.codigo]}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          
+          {/* Footer con total y botones */}
+          {Object.keys(carrito).length > 0 && (
+            <div className="bg-white border-t p-4 sm:p-6 shadow-lg">
+              <div className="max-w-2xl mx-auto">
+                {/* Total */}
+                <div className="flex justify-between items-center mb-4 sm:mb-6 py-3 sm:py-4 border-t-2 border-mare-brown">
+                  <span className="text-2xl sm:text-3xl lg:text-4xl font-bold text-mare-brown">Total:</span>
+                  <span className="text-3xl sm:text-4xl lg:text-5xl font-bold text-mare-brown">${calcularTotal()}</span>
+                </div>
+                
+                {/* Comentarios adicionales */}
+                <div className="mb-4 sm:mb-6">
+                  <label className="block text-sm sm:text-base lg:text-lg font-semibold mb-2 sm:mb-3 text-mare-brown">
+                    📝 Comentarios adicionales del pedido:
+                  </label>
+                  <textarea
+                    placeholder="Ej: Entregar urgente, horario de recepción, dirección específica..."
+                    value={comentarioFinal}
+                    onChange={(e) => setComentarioFinal(e.target.value)}
+                    className="w-full border-2 border-mare-brown rounded-xl sm:rounded-2xl px-3 sm:px-4 py-3 sm:py-4 text-sm sm:text-base resize-none touch-manipulation"
+                    style={{ fontSize: '16px' }}
+                    rows={isMobile ? "3" : "4"}
+                  />
+                </div>
+
+                {/* Botones */}
+                <div className="space-y-3 sm:space-y-4">
+                  <button
+                    onClick={() => setMostrarCarrito(false)}
+                    className="w-full py-3 sm:py-4 rounded-xl sm:rounded-2xl font-bold text-base sm:text-lg border-2 border-mare-brown text-mare-brown bg-white hover:bg-gray-50 transition-colors touch-manipulation"
+                  >
+                    ← Seguir comprando
+                  </button>
+                  <button
+                    onClick={generarPedido}
+                    className="w-full text-white py-4 sm:py-5 rounded-xl sm:rounded-2xl font-bold text-lg sm:text-xl hover:opacity-90 transition-colors flex items-center justify-center space-x-3 sm:space-x-4 shadow-lg touch-manipulation"
+                    style={{ backgroundColor: '#25D366' }}
+                  >
+                    <Send size={isMobile ? 24 : 28} />
+                    <span>📱 Enviar Pedido por WhatsApp</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default CatalogoMare; + grupo.producto.precio + '\n';
+      mensaje += '  Subtotal: 
+      
+      const comentario = comentariosProducto[grupo.producto.codigo];
+      if (comentario && comentario.trim()) {
+        mensaje += '  COMENTARIO: ' + comentario + '\n';
+      }
+      mensaje += '\n';
+    });
+
+    mensaje += 'TOTAL PEDIDO:  + calcularTotal() + '\n\n';
+    
+    if (comentarioFinal && comentarioFinal.trim()) {
+      mensaje += 'COMENTARIOS ADICIONALES:\n' + comentarioFinal + '\n\n';
+    }
+    
+    mensaje += 'Pedido enviado desde Catalogo MARE\nBy Feraben SRL';
+
+    const numeroWhatsapp = '59897998999';
+    const mensajeCorto = mensaje.length > 1800 ? 
+      mensaje.substring(0, 1600) + '\n...(mensaje truncado)\n\nTotal:  + calcularTotal() :
+      mensaje;
+    
+    const url = 'https://wa.me/' + numeroWhatsapp + '?text=' + encodeURIComponent(mensajeCorto);
+    window.open(url, '_blank');
+
+    setCarrito({});
+    setComentarioFinal('');
+    setComentariosProducto({});
+    setMostrarCarrito(false);
+  };
+
+  const cantidadItems = Object.values(carrito).reduce((total, item) => total + item.cantidad, 0);
+
+  // Componente de carga
+  if (cargando) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-mare-beige">
+        <div className="text-center">
+          <Loader className="animate-spin mx-auto mb-4 text-mare-brown" size={isMobile ? 40 : 48} />
+          <h2 className="text-xl sm:text-2xl font-bold mb-2 text-mare-brown">
+            Cargando catálogo...
+          </h2>
+          <p className="text-sm sm:text-base opacity-80 text-mare-brown">
+            Sincronizando desde GitHub
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Componente de error
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-mare-beige">
+        <div className="text-center p-6 sm:p-8 bg-white rounded-lg sm:rounded-2xl shadow-lg max-w-md mx-4">
+          <AlertCircle className="mx-auto mb-4 text-red-500" size={isMobile ? 40 : 48} />
+          <h2 className="text-xl sm:text-2xl font-bold mb-2 text-red-600">Error al cargar</h2>
+          <p className="text-gray-600 mb-4 text-sm sm:text-base">{error}</p>
+          <button
+            onClick={cargarDatos}
+            className="px-6 sm:px-8 py-3 sm:py-4 text-white rounded-lg sm:rounded-xl hover:opacity-90 bg-mare-brown text-sm sm:text-base font-semibold touch-manipulation"
+          >
+            Reintentar
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-mare-beige">
+      <Header 
+        productos={productos}
+        cantidadItems={cantidadItems}
+        onToggleCarrito={() => setMostrarCarrito(!mostrarCarrito)}
+      />
+
+      <SearchBar 
+        busqueda={busqueda}
+        onBusquedaChange={setBusqueda}
+      />
+
+      <CategoryTabs 
+        categorias={categorias}
+        categoriaActiva={categoriaActiva}
+        onCategoriaChange={setCategoriaActiva}
+      />
+
+      {/* Grid de Productos */}
+      <div className="px-4 sm:px-6 pb-10 sm:pb-16">
+        {productosFiltrados.length === 0 ? (
+          <div className="text-center py-12 sm:py-16">
+            <p className="text-xl sm:text-2xl text-gray-600">No se encontraron productos</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8">
+            {productosFiltrados.map(producto => (
+              <ProductCard
+                key={producto.codigo}
+                producto={producto}
+                imagenesActivas={imagenesActivas}
+                carrito={carrito}
+                comentariosProducto={comentariosProducto}
+                onCambiarImagen={cambiarImagen}
+                onAgregarCarrito={agregarAlCarrito}
+                onActualizarCantidad={actualizarCantidad}
+                onEliminarDelCarrito={eliminarDelCarrito}
+                onActualizarComentario={actualizarComentarioProducto}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Modal del Carrito */}
+      {mostrarCarrito && (
+        <div className="fixed inset-0 bg-white z-50 flex flex-col">
+          {/* Header del carrito */}
+          <div className="p-4 sm:p-6 border-b shadow-sm bg-mare-brown">
+            <div className="flex items-center justify-between">
+              <button
+                onClick={() => setMostrarCarrito(false)}
+                className="flex items-center space-x-2 sm:space-x-3 text-white hover:opacity-80 transition-opacity touch-manipulation min-h-touch"
+              >
+                <span className="text-xl sm:text-2xl">←</span>
+                <span className="text-sm sm:text-base lg:text-lg font-semibold">Volver al catálogo</span>
+              </button>
+              <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">
+                🛒 Mi Pedido
+              </h2>
+              <div className="w-16 sm:w-24"></div>
+            </div>
+          </div>
+          
+          {/* Contenido del carrito */}
+          <div className="flex-1 overflow-y-auto p-4 sm:p-6 bg-mare-beige">
+            {Object.keys(carrito).length === 0 ? (
+              <div className="text-center py-12 sm:py-16">
+                <div className="text-6xl sm:text-8xl mb-6">🛒</div>
+                <p className="text-xl sm:text-2xl lg:text-3xl mb-6 font-semibold text-mare-brown">Tu carrito está vacío</p>
+                <button
+                  onClick={() => setMostrarCarrito(false)}
+                  className="px-6 sm:px-8 py-3 sm:py-4 text-white rounded-xl sm:rounded-2xl font-bold text-base sm:text-lg bg-mare-brown hover:bg-mare-brown/90 transition-colors touch-manipulation"
+                >
+                  Agregar productos
+                </button>
+              </div>
+            ) : (
+              <div className="max-w-2xl mx-auto space-y-4 sm:space-y-6">
+                {Object.entries(carrito).map(([key, item]) => (
+                  <div key={key} className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-lg border-2 border-mare-brown">
+                    {/* Header del producto */}
+                    <div className="flex justify-between items-start mb-3 sm:mb-4">
+                      <div className="flex-1">
+                        <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-mare-brown">
+                          {item.producto.nombre}
+                        </h3>
+                        <p className="text-sm sm:text-base text-gray-600 mt-1">Código: {item.producto.codigo}</p>
+                        <p className="text-sm sm:text-base mt-1 text-mare-brown">
+                          Color: <span className="font-semibold">{item.color}</span>
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => eliminarDelCarrito(key)}
+                        className="text-red-500 hover:text-red-700 p-2 sm:p-3 rounded-xl font-bold text-base sm:text-lg bg-red-100 hover:bg-red-200 transition-colors touch-manipulation min-h-touch"
+                      >
+                        🗑️
+                      </button>
+                    </div>
+                    
+                    {/* Cantidad y precio */}
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center space-x-3 sm:space-x-4">
+                        <span className="text-sm sm:text-base lg:text-lg font-semibold text-mare-brown">Cantidad:</span>
+                        <div className="flex items-center space-x-2 sm:space-x-3">
+                          <button
+                            onClick={() => actualizarCantidad(key, item.cantidad - 1)}
+                            className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-mare-brown flex items-center justify-center hover:bg-gray-100 touch-manipulation"
+                          >
+                            <Minus size={isMobile ? 14 : 18} className="text-mare-brown" />
+                          </button>
+                          
+                          <input
+                            type="number"
+                            min="1"
+                            value={item.cantidad}
+                            onChange={(e) => establecerCantidad(key, e.target.value)}
+                            className="w-16 sm:w-20 text-center font-bold border-2 border-mare-brown rounded-lg sm:rounded-xl px-2 sm:px-3 py-1 sm:py-2 text-base sm:text-lg text-mare-brown touch-manipulation"
+                            style={{ fontSize: '16px' }}
+                          />
+                          
+                          <button
+                            onClick={() => actualizarCantidad(key, item.cantidad + 1)}
+                            className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-mare-brown flex items-center justify-center hover:bg-gray-100 touch-manipulation"
+                          >
+                            <Plus size={isMobile ? 14 : 18} className="text-mare-brown" />
+                          </button>
+                        </div>
+                      </div>
+                      
+                      <div className="text-right">
+                        <p className="text-sm sm:text-base text-gray-600">${item.producto.precio} c/u</p>
+                        <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-mare-brown">
+                          ${item.producto.precio * item.cantidad}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Comentario del producto si existe */}
+                    {comentariosProducto[item.producto.codigo] && (
+                      <div className="mt-3 sm:mt-4 p-3 sm:p-4 rounded-xl sm:rounded-2xl border-2 border-mare-brown bg-mare-light">
+                        <p className="text-xs sm:text-sm font-semibold mb-1 sm:mb-2 text-mare-brown">
+                          💬 Comentario:
+                        </p>
+                        <p className="text-sm sm:text-base text-gray-700">
+                          {comentariosProducto[item.producto.codigo]}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          
+          {/* Footer con total y botones */}
+          {Object.keys(carrito).length > 0 && (
+            <div className="bg-white border-t p-4 sm:p-6 shadow-lg">
+              <div className="max-w-2xl mx-auto">
+                {/* Total */}
+                <div className="flex justify-between items-center mb-4 sm:mb-6 py-3 sm:py-4 border-t-2 border-mare-brown">
+                  <span className="text-2xl sm:text-3xl lg:text-4xl font-bold text-mare-brown">Total:</span>
+                  <span className="text-3xl sm:text-4xl lg:text-5xl font-bold text-mare-brown">${calcularTotal()}</span>
+                </div>
+                
+                {/* Comentarios adicionales */}
+                <div className="mb-4 sm:mb-6">
+                  <label className="block text-sm sm:text-base lg:text-lg font-semibold mb-2 sm:mb-3 text-mare-brown">
+                    📝 Comentarios adicionales del pedido:
+                  </label>
+                  <textarea
+                    placeholder="Ej: Entregar urgente, horario de recepción, dirección específica..."
+                    value={comentarioFinal}
+                    onChange={(e) => setComentarioFinal(e.target.value)}
+                    className="w-full border-2 border-mare-brown rounded-xl sm:rounded-2xl px-3 sm:px-4 py-3 sm:py-4 text-sm sm:text-base resize-none touch-manipulation"
+                    style={{ fontSize: '16px' }}
+                    rows={isMobile ? "3" : "4"}
+                  />
+                </div>
+
+                {/* Botones */}
+                <div className="space-y-3 sm:space-y-4">
+                  <button
+                    onClick={() => setMostrarCarrito(false)}
+                    className="w-full py-3 sm:py-4 rounded-xl sm:rounded-2xl font-bold text-base sm:text-lg border-2 border-mare-brown text-mare-brown bg-white hover:bg-gray-50 transition-colors touch-manipulation"
+                  >
+                    ← Seguir comprando
+                  </button>
+                  <button
+                    onClick={generarPedido}
+                    className="w-full text-white py-4 sm:py-5 rounded-xl sm:rounded-2xl font-bold text-lg sm:text-xl hover:opacity-90 transition-colors flex items-center justify-center space-x-3 sm:space-x-4 shadow-lg touch-manipulation"
+                    style={{ backgroundColor: '#25D366' }}
+                  >
+                    <Send size={isMobile ? 24 : 28} />
+                    <span>📱 Enviar Pedido por WhatsApp</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default CatalogoMare; + grupo.totalProducto + '\n';
       
       const comentario = comentariosProducto[grupo.producto.codigo];
       if (comentario && comentario.trim()) {
