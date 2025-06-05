@@ -48,6 +48,10 @@ a {
   border-color: var(--mare-primary);
 }
 
+.mare-accent {
+  background-color: var(--mare-accent);
+}
+
 /* Animaciones suaves */
 .transition-mare {
   transition: all 0.3s ease;
