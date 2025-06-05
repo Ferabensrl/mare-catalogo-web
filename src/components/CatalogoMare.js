@@ -1,7 +1,18 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import { ShoppingCart, Plus, Minus, Send, Search, Loader, AlertCircle } from 'lucide-react';
+import Image from 'next/image';
+import {
+  ShoppingCart,
+  Plus,
+  Minus,
+  Send,
+  Search,
+  Loader,
+  AlertCircle,
+  ChevronLeft,
+  ChevronRight,
+} from 'lucide-react';
 
 const CatalogoMare = () => {
   const [productos, setProductos] = useState([]);
@@ -12,6 +23,7 @@ const CatalogoMare = () => {
   const [comentarioFinal, setComentarioFinal] = useState('');
   const [comentariosProducto, setComentariosProducto] = useState({});
   const [imagenesActivas, setImagenesActivas] = useState({});
+  const [touchStartX, setTouchStartX] = useState(null);
   const [categorias, setCategorias] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
@@ -135,6 +147,23 @@ const CatalogoMare = () => {
       ...prev,
       [productoId]: indice
     }));
+  };
+
+  const handleTouchStart = (e) => {
+    setTouchStartX(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = (productoId, total, e) => {
+    if (touchStartX === null) return;
+    const delta = e.changedTouches[0].clientX - touchStartX;
+    if (delta > 50) {
+      const prevIndex = (imagenesActivas[productoId] || 0) - 1;
+      cambiarImagen(productoId, prevIndex < 0 ? total - 1 : prevIndex);
+    } else if (delta < -50) {
+      const nextIndex = (imagenesActivas[productoId] || 0) + 1;
+      cambiarImagen(productoId, nextIndex >= total ? 0 : nextIndex);
+    }
+    setTouchStartX(null);
   };
 
   const calcularTotal = () => {
@@ -350,15 +379,17 @@ const CatalogoMare = () => {
               return (
                 <div key={producto.codigo} className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
                   {/* CARRUSEL DE IMÁGENES */}
-                  <div className="relative">
-                    <img
+                  <div
+                    className="relative aspect-square"
+                    onTouchStart={handleTouchStart}
+                    onTouchEnd={(e) => handleTouchEnd(producto.codigo, producto.imagenes.length, e)}
+                  >
+                    <Image
                       src={producto.imagenes[imagenesActivas[producto.codigo] || 0]}
                       alt={producto.nombre}
-                      className="w-full object-cover"
-                      style={{ 
-                        height: window.innerWidth < 640 ? '200px' : 
-                               window.innerWidth < 1024 ? '240px' : '280px' 
-                      }}
+                      fill
+                      className="object-contain w-full h-auto"
+                      sizes="(max-width: 640px) 200px, (max-width: 1024px) 240px, 280px"
                       onError={(e) => {
                         const currentSrc = e.target.src;
                         if (currentSrc.includes('.jpg')) {
@@ -370,6 +401,29 @@ const CatalogoMare = () => {
                         }
                       }}
                     />
+
+                    {producto.imagenes.length > 1 && (
+                      <>
+                        <button
+                          onClick={() => {
+                            const prev = (imagenesActivas[producto.codigo] || 0) - 1;
+                            cambiarImagen(producto.codigo, prev < 0 ? producto.imagenes.length - 1 : prev);
+                          }}
+                          className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/70 rounded-full p-1"
+                        >
+                          <ChevronLeft size={20} />
+                        </button>
+                        <button
+                          onClick={() => {
+                            const next = (imagenesActivas[producto.codigo] || 0) + 1;
+                            cambiarImagen(producto.codigo, next >= producto.imagenes.length ? 0 : next);
+                          }}
+                          className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/70 rounded-full p-1"
+                        >
+                          <ChevronRight size={20} />
+                        </button>
+                      </>
+                    )}
                     
                     {/* Indicadores de imágenes */}
                     {producto.imagenes.length > 1 && (
@@ -595,6 +649,21 @@ const CatalogoMare = () => {
           </div>
         )}
       </div>
+
+      {!mostrarCarrito && (
+        <button
+          onClick={() => setMostrarCarrito(true)}
+          className="fixed bottom-4 right-4 p-4 rounded-full text-white shadow-lg"
+          style={{ backgroundColor: '#8F6A50' }}
+        >
+          <ShoppingCart size={24} />
+          {cantidadItems > 0 && (
+            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+              {cantidadItems}
+            </span>
+          )}
+        </button>
+      )}
 
       {/* Modal del Carrito - Optimizado */}
       {mostrarCarrito && (
