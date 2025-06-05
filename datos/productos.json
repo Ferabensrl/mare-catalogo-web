@@ -90,22 +90,5 @@
     ],
     "colores": [],
     "disponible": true
-  },
-  {
-    "codigo": "LB318",
-    "nombre": "Bandolera",
-    "categoria": "Marroquineria",
-    "precio": "695",
-    "descripcion": "Bandolera",
-    "medidas": "25*12*19",
-    "imagenes": [
-      "https://ferabensrl.github.io/mare-catalogo-web/imagenes/LB318-1.jpg",
-      "https://ferabensrl.github.io/mare-catalogo-web/imagenes/LB318-2.jpg",
-      "https://ferabensrl.github.io/mare-catalogo-web/imagenes/LB318-3.jpg",
-      "https://ferabensrl.github.io/mare-catalogo-web/imagenes/LB318-4.jpg",
-      "https://ferabensrl.github.io/mare-catalogo-web/imagenes/LB318-5.jpg"
-    ],
-    "colores": ["Negro", "Rosado", "Beige", "Bordeaux", "Rosa Viejo"],
-    "disponible": true
   }
 ]
