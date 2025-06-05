@@ -1,0 +1,4 @@
+name: Disable Pages Build
+on:
+  push:
+    branches: []
