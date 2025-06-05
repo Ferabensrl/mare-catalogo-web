@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { ShoppingCart, Plus, Minus, Send, Search, Loader, AlertCircle, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const CatalogoMare = () => {
@@ -9,7 +10,6 @@ const CatalogoMare = () => {
   const [carrito, setCarrito] = useState({});
   const [categoriaActiva, setCategoriaActiva] = useState('todos');
   const [busqueda, setBusqueda] = useState('');
-  const [mostrarCarrito, setMostrarCarrito] = useState(false);
   const [comentarioFinal, setComentarioFinal] = useState('');
   const [comentariosProducto, setComentariosProducto] = useState({});
   const [imagenesActivas, setImagenesActivas] = useState({});
@@ -18,6 +18,28 @@ const CatalogoMare = () => {
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
   const touchStart = useRef({});
+
+  // Persistir carrito y comentarios entre páginas
+  useEffect(() => {
+    const savedCarrito = localStorage.getItem('mare-carrito');
+    const savedComentarios = localStorage.getItem('mare-comentarios-producto');
+    const savedComentarioFinal = localStorage.getItem('mare-comentario-final');
+    if (savedCarrito) setCarrito(JSON.parse(savedCarrito));
+    if (savedComentarios) setComentariosProducto(JSON.parse(savedComentarios));
+    if (savedComentarioFinal) setComentarioFinal(savedComentarioFinal);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('mare-carrito', JSON.stringify(carrito));
+  }, [carrito]);
+
+  useEffect(() => {
+    localStorage.setItem('mare-comentarios-producto', JSON.stringify(comentariosProducto));
+  }, [comentariosProducto]);
+
+  useEffect(() => {
+    localStorage.setItem('mare-comentario-final', comentarioFinal);
+  }, [comentarioFinal]);
 
   // Cargar datos desde el JSON generado automáticamente
   const cargarDatos = async () => {
@@ -219,7 +241,6 @@ const CatalogoMare = () => {
     setCarrito({});
     setComentarioFinal('');
     setComentariosProducto({});
-    setMostrarCarrito(false);
   };
 
   const cantidadItems = Object.values(carrito).reduce((total, item) => total + item.cantidad, 0);
@@ -278,11 +299,11 @@ const CatalogoMare = () => {
         <div className="p-4 text-white">
           <div className="flex items-center justify-between">
             <div className="text-center flex-1">
-              <h1 className="text-2xl md:text-3xl font-bold tracking-wider font-serif">
+              <h1 className="font-bold tracking-wider font-serif" style={{ fontSize: '28px' }}>
                 MARÉ
               </h1>
-              <p className="text-sm md:text-base opacity-90 mt-1">Tu estilo en cada detalle</p>
-              <div className="text-sm opacity-80 flex items-center justify-center space-x-3 mt-2">
+              <p className="opacity-90 mt-1" style={{ fontSize: '18px' }}>Tu estilo en cada detalle</p>
+              <div className="opacity-80 flex items-center justify-center space-x-3 mt-2" style={{ fontSize: '16px' }}>
                 <span>@mare_uy</span>
                 <span>•</span>
                 <span>🔄 Conectado a GitHub</span>
@@ -290,18 +311,18 @@ const CatalogoMare = () => {
                 <span>{productos.length} productos</span>
               </div>
             </div>
-            <button
-              onClick={() => setMostrarCarrito(!mostrarCarrito)}
-              className="relative p-3 rounded-full hover:bg-white/20 transition-colors"
+            <Link
+              href="/carrito"
+              className="relative p-4 rounded-full hover:bg-white/20 transition-colors"
               style={{ backgroundColor: 'rgba(255,255,255,0.1)' }}
             >
-              <ShoppingCart size={24} />
+              <ShoppingCart size={28} />
               {cantidadItems > 0 && (
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-sm rounded-full w-6 h-6 flex items-center justify-center font-bold">
                   {cantidadItems}
                 </span>
               )}
-            </button>
+            </Link>
           </div>
         </div>
       </div>
@@ -309,14 +330,14 @@ const CatalogoMare = () => {
       {/* Búsqueda - Mejorada */}
       <div className="p-4">
         <div className="relative">
-          <Search className="absolute left-4 top-4" size={20} style={{ color: '#8F6A50' }} />
+          <Search className="absolute left-4 top-5" size={24} style={{ color: '#8F6A50' }} />
           <input
             type="text"
             placeholder="Buscar productos o códigos..."
             value={busqueda}
             onChange={(e) => setBusqueda(e.target.value)}
-            className="w-full pl-12 pr-4 py-4 text-base border border-gray-300 rounded-xl focus:ring-2 focus:border-transparent bg-white shadow-sm"
-            style={{ fontSize: '16px' }}
+            className="w-full pl-14 pr-4 py-5 text-base border border-gray-300 rounded-xl focus:ring-2 focus:border-transparent bg-white shadow-sm"
+            style={{ fontSize: '18px' }}
           />
         </div>
       </div>
@@ -379,7 +400,7 @@ const CatalogoMare = () => {
                       alt={producto.nombre}
                       width={400}
                       height={400}
-                      className="w-full h-48 sm:h-60 md:h-72 object-cover cursor-pointer"
+                      className="w-full h-32 sm:h-40 md:h-48 object-cover cursor-pointer"
                       onClick={() => abrirImagen(producto.codigo, imagenesActivas[producto.codigo] || 0)}
                       onError={(e) => {
                         const currentSrc = e.target.src;
@@ -458,7 +479,7 @@ const CatalogoMare = () => {
                       <p className="text-base text-gray-600 mb-3">📏 {producto.medidas}</p>
                     )}
                     
-                    <p className="text-3xl font-bold mb-4" style={{ color: '#8F6A50' }}>
+                    <p className="font-bold mb-4" style={{ color: '#8F6A50', fontSize: '26px' }}>
                       ${producto.precio}
                     </p>
                     
@@ -469,7 +490,7 @@ const CatalogoMare = () => {
                         </p>
                       )}
                       
-                      <div className="flex items-center space-x-3 mb-4">
+                      <div className="flex items-center space-x-4 mb-5">
                         <label className="text-base font-semibold" style={{ color: '#8F6A50' }}>
                           Cantidad:
                         </label>
@@ -478,8 +499,8 @@ const CatalogoMare = () => {
                           min="1"
                           defaultValue="1"
                           id={'cantidad-' + producto.codigo}
-                          className="w-24 text-center border-2 rounded-lg px-3 py-2 text-lg font-semibold placeholder-gray-400"
-                          style={{ borderColor: '#8F6A50', color: '#8F6A50', fontSize: '16px' }}
+                          className="w-28 text-center border-2 rounded-lg px-4 py-3 text-lg font-semibold placeholder-gray-400"
+                          style={{ borderColor: '#8F6A50', color: '#8F6A50', fontSize: '18px' }}
                         />
                       </div>
 
@@ -492,8 +513,8 @@ const CatalogoMare = () => {
                             type="text"
                             placeholder="Ej: Color específico, talle, observaciones..."
                             id={'comentario-' + producto.codigo}
-                            className="flex-1 text-base border-2 rounded-lg px-4 py-3 bg-gray-50 placeholder-gray-400"
-                            style={{ borderColor: '#8F6A50', fontSize: '16px', color: '#8F6A50' }}
+                            className="flex-1 text-base border-2 rounded-lg px-5 py-4 bg-gray-50 placeholder-gray-400"
+                            style={{ borderColor: '#8F6A50', fontSize: '18px', color: '#8F6A50' }}
                           />
                           <button
                             onClick={() => {
@@ -504,7 +525,7 @@ const CatalogoMare = () => {
                                 comentarioInput.value = '';
                               }
                             }}
-                            className="px-4 py-3 text-base font-semibold rounded-lg border-2 text-white min-w-[60px]"
+                            className="px-5 py-4 text-base font-semibold rounded-lg border-2 text-white min-w-[60px]"
                             style={{ backgroundColor: '#8F6A50', borderColor: '#8F6A50' }}
                           >
                             💬
@@ -530,8 +551,8 @@ const CatalogoMare = () => {
                             type="text"
                             value={comentariosProducto[producto.codigo]}
                             onChange={(e) => actualizarComentarioProducto(producto.codigo, e.target.value)}
-                            className="w-full text-base border-2 rounded-lg px-4 py-3 bg-white placeholder-gray-400"
-                            style={{ borderColor: '#8F6A50', color: '#8F6A50', fontSize: '16px' }}
+                            className="w-full text-base border-2 rounded-lg px-5 py-4 bg-white placeholder-gray-400"
+                            style={{ borderColor: '#8F6A50', color: '#8F6A50', fontSize: '18px' }}
                             placeholder="Edita tu comentario aquí..."
                           />
                         </div>
@@ -562,8 +583,8 @@ const CatalogoMare = () => {
                                 agregarAlCarrito(producto.codigo, 'SURTIDO', cantidad);
                                 cantidadInput.value = '1';
                               }}
-                              className="px-5 py-3 rounded-full text-base font-bold transition-colors hover:shadow-lg border-2 text-white"
-                              style={{ backgroundColor: '#8F6A50', borderColor: '#8F6A50', minHeight: '48px' }}
+                              className="px-6 py-4 rounded-full text-base font-bold transition-colors hover:shadow-lg border-2 text-white"
+                              style={{ backgroundColor: '#8F6A50', borderColor: '#8F6A50', minHeight: '56px' }}
                             >
                               + SURTIDO
                             </button>
@@ -577,12 +598,12 @@ const CatalogoMare = () => {
                                   agregarAlCarrito(producto.codigo, color, cantidad);
                                   cantidadInput.value = '1';
                                 }}
-                                className="px-4 py-3 rounded-full text-base font-semibold transition-colors hover:shadow-md border-2"
-                                style={{ 
-                                  backgroundColor: '#E3D4C1', 
+                                className="px-5 py-4 rounded-full text-base font-semibold transition-colors hover:shadow-md border-2"
+                                style={{
+                                  backgroundColor: '#E3D4C1',
                                   color: '#8F6A50',
                                   borderColor: '#8F6A50',
-                                  minHeight: '48px'
+                                  minHeight: '56px'
                                 }}
                               >
                                 + {color}
@@ -594,7 +615,7 @@ const CatalogoMare = () => {
                       
                       {Object.entries(carrito).some(([key]) => key.startsWith(producto.codigo)) && (
                         <div className="mt-4 p-4 rounded-xl border-2" style={{ backgroundColor: '#E3D4C1', borderColor: '#8F6A50' }}>
-                          <p className="text-base font-bold mb-3" style={{ color: '#8F6A50' }}>
+                          <p className="text-base font-bold mb-3" style={{ color: '#8F6A50', fontSize: '18px' }}>
                             🛒 En tu carrito:
                           </p>
                           {Object.entries(carrito)
@@ -602,7 +623,7 @@ const CatalogoMare = () => {
                             .map(([key, item]) => (
                               <div key={key} className="flex items-center justify-between mb-3 p-3 bg-white rounded-lg">
                                 <div className="flex-1">
-                                  <span className="text-base font-semibold" style={{ color: '#8F6A50' }}>
+                                  <span className="text-base font-semibold" style={{ color: '#8F6A50', fontSize: '16px' }}>
                                     {item.color}: {item.cantidad} unidades
                                   </span>
                                 </div>
@@ -639,169 +660,6 @@ const CatalogoMare = () => {
         )}
       </div>
 
-      {/* Modal del Carrito - Optimizado */}
-      {mostrarCarrito && (
-        <div className="fixed inset-0 bg-white z-50 flex flex-col">
-          {/* Header del carrito */}
-          <div className="p-4 border-b shadow-sm" style={{ backgroundColor: '#8F6A50' }}>
-            <div className="flex items-center justify-between">
-              <button
-                onClick={() => setMostrarCarrito(false)}
-                className="flex items-center space-x-3 text-white hover:opacity-80 transition-opacity"
-              >
-                <span className="text-2xl">←</span>
-                <span className="text-base font-semibold">Volver al catálogo</span>
-              </button>
-              <h2 className="text-2xl font-bold text-white">
-                🛒 Mi Pedido
-              </h2>
-              <div className="w-24"></div>
-            </div>
-          </div>
-          
-          {/* Contenido del carrito */}
-          <div className="flex-1 overflow-y-auto p-4" style={{ backgroundColor: '#E3D4C1' }}>
-            {Object.keys(carrito).length === 0 ? (
-              <div className="text-center py-16">
-                <div className="text-8xl mb-6">🛒</div>
-                <p className="text-2xl mb-6 font-semibold" style={{ color: '#8F6A50' }}>Tu carrito está vacío</p>
-                <button
-                  onClick={() => setMostrarCarrito(false)}
-                  className="px-8 py-4 text-white rounded-xl font-bold text-lg"
-                  style={{ backgroundColor: '#8F6A50' }}
-                >
-                  Agregar productos
-                </button>
-              </div>
-            ) : (
-              <div className="max-w-2xl mx-auto space-y-5">
-                {Object.entries(carrito).map(([key, item]) => (
-                  <div key={key} className="bg-white rounded-2xl p-5 shadow-lg border-2" style={{ borderColor: '#8F6A50' }}>
-                    {/* Header del producto */}
-                    <div className="flex justify-between items-start mb-4">
-                      <div className="flex-1">
-                        <h3 className="text-xl font-bold" style={{ color: '#8F6A50' }}>
-                          {item.producto.nombre}
-                        </h3>
-                        <p className="text-base text-gray-600 mt-1">Código: {item.producto.codigo}</p>
-                        <p className="text-base mt-1" style={{ color: '#8F6A50' }}>
-                          Color: <span className="font-semibold">{item.color}</span>
-                        </p>
-                      </div>
-                      <button
-                        onClick={() => eliminarDelCarrito(key)}
-                        className="text-red-500 hover:text-red-700 p-3 rounded-xl font-bold text-lg"
-                        style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)' }}
-                      >
-                        🗑️
-                      </button>
-                    </div>
-                    
-                    {/* Cantidad y precio */}
-                    <div className="flex justify-between items-center">
-                      <div className="flex items-center space-x-4">
-                        <span className="text-base font-semibold" style={{ color: '#8F6A50' }}>Cantidad:</span>
-                        <div className="flex items-center space-x-3">
-                          <button
-                            onClick={() => actualizarCantidad(key, item.cantidad - 1)}
-                            className="w-10 h-10 rounded-full border-2 flex items-center justify-center hover:bg-gray-100"
-                            style={{ borderColor: '#8F6A50' }}
-                          >
-                            <Minus size={18} style={{ color: '#8F6A50' }} />
-                          </button>
-                          
-                          <input
-                            type="number"
-                            min="1"
-                            value={item.cantidad}
-                            onChange={(e) => establecerCantidad(key, e.target.value)}
-                            className="w-20 text-center font-bold border-2 rounded-lg px-3 py-2 text-lg"
-                            style={{ borderColor: '#8F6A50', color: '#8F6A50', fontSize: '18px' }}
-                          />
-                          
-                          <button
-                            onClick={() => actualizarCantidad(key, item.cantidad + 1)}
-                            className="w-10 h-10 rounded-full border-2 flex items-center justify-center hover:bg-gray-100"
-                            style={{ borderColor: '#8F6A50' }}
-                          >
-                            <Plus size={18} style={{ color: '#8F6A50' }} />
-                          </button>
-                        </div>
-                      </div>
-                      
-                      <div className="text-right">
-                        <p className="text-base text-gray-600">${item.producto.precio} c/u</p>
-                        <p className="text-2xl font-bold" style={{ color: '#8F6A50' }}>
-                          ${item.producto.precio * item.cantidad}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Comentario del producto si existe */}
-                    {comentariosProducto[item.producto.codigo] && (
-                      <div className="mt-4 p-4 rounded-xl border-2" style={{ backgroundColor: '#F8F6F3', borderColor: '#8F6A50' }}>
-                        <p className="text-sm font-semibold mb-2" style={{ color: '#8F6A50' }}>
-                          💬 Comentario:
-                        </p>
-                        <p className="text-base text-gray-700">
-                          {comentariosProducto[item.producto.codigo]}
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-          
-          {/* Footer con total y botones */}
-          {Object.keys(carrito).length > 0 && (
-            <div className="bg-white border-t p-5 shadow-lg">
-              <div className="max-w-2xl mx-auto">
-                {/* Total */}
-                <div className="flex justify-between items-center mb-5 py-4 border-t-2" style={{ borderColor: '#8F6A50' }}>
-                  <span className="text-3xl font-bold" style={{ color: '#8F6A50' }}>Total:</span>
-                  <span className="text-4xl font-bold" style={{ color: '#8F6A50' }}>${calcularTotal()}</span>
-                </div>
-                
-                {/* Comentarios adicionales */}
-                <div className="mb-5">
-                  <label className="block text-base font-semibold mb-3" style={{ color: '#8F6A50' }}>
-                    📝 Comentarios adicionales del pedido:
-                  </label>
-                  <textarea
-                    placeholder="Ej: Entregar urgente, horario de recepción, dirección específica..."
-                    value={comentarioFinal}
-                    onChange={(e) => setComentarioFinal(e.target.value)}
-                    className="w-full border-2 rounded-xl px-4 py-4 text-base resize-none"
-                    style={{ borderColor: '#8F6A50', fontSize: '16px' }}
-                    rows="4"
-                  />
-                </div>
-
-                {/* Botones */}
-                <div className="space-y-4">
-                  <button
-                    onClick={() => setMostrarCarrito(false)}
-                    className="w-full py-4 rounded-xl font-bold text-lg border-2 transition-colors"
-                    style={{ borderColor: '#8F6A50', color: '#8F6A50', backgroundColor: 'white' }}
-                  >
-                    ← Seguir comprando
-                  </button>
-                  <button
-                    onClick={generarPedido}
-                    className="w-full text-white py-5 rounded-xl font-bold text-xl hover:opacity-90 transition-colors flex items-center justify-center space-x-4 shadow-lg"
-                    style={{ backgroundColor: '#25D366' }}
-                  >
-                    <Send size={28} />
-                    <span>📱 Enviar Pedido por WhatsApp</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
 
       {imagenModal && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
@@ -823,19 +681,17 @@ const CatalogoMare = () => {
         </div>
       )}
 
-      {!mostrarCarrito && (
-        <button
-          onClick={() => setMostrarCarrito(true)}
-          className="fixed bottom-4 right-4 bg-[#8F6A50] text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg z-40"
-        >
-          <ShoppingCart size={24} />
-          {cantidadItems > 0 && (
-            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-              {cantidadItems}
-            </span>
-          )}
-        </button>
-      )}
+      <Link
+        href="/carrito"
+        className="fixed bottom-4 right-4 bg-[#8F6A50] text-white rounded-full w-16 h-16 flex items-center justify-center shadow-lg z-40"
+      >
+        <ShoppingCart size={28} />
+        {cantidadItems > 0 && (
+          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-sm rounded-full w-6 h-6 flex items-center justify-center font-bold">
+            {cantidadItems}
+          </span>
+        )}
+      </Link>
     </div>
   );
 };

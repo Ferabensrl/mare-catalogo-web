@@ -24,6 +24,13 @@ body {
 body {
   color: rgb(var(--foreground-rgb));
   background: var(--mare-secondary);
+  font-size: 18px;
+}
+
+input,
+button,
+textarea {
+  font-size: 18px;
 }
 
 a {
