@@ -123,13 +123,18 @@
     "precio": 695,
     "medidas": "25*12*19",
     "imagenes": [
-      "LB318-1",
-      "LB318-2",
-      "LB318-3",
-      "LB318-4",
-      "LB318-5"
+      "https://cdn.jsdelivr.net/gh/Ferabensrl/catalogo-mare@main/imagenes/LB318-1",
+      "https://cdn.jsdelivr.net/gh/Ferabensrl/catalogo-mare@main/imagenes/LB318-2",
+      "https://cdn.jsdelivr.net/gh/Ferabensrl/catalogo-mare@main/imagenes/LB318-3",
+      "https://cdn.jsdelivr.net/gh/Ferabensrl/catalogo-mare@main/imagenes/LB318-4",
+      "https://cdn.jsdelivr.net/gh/Ferabensrl/catalogo-mare@main/imagenes/LB318-5"
     ],
-    "coloresDisponibles": [],
-    "estado": "activo"
+    "colores_disponibles": [
+      "Negro",
+      "Rosado",
+      "Beige",
+      "Bordeaux",
+      "Rosa Viejo"
+    ]
   }
 ]
