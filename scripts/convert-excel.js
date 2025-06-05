@@ -40,7 +40,13 @@ for (let row = 1; row <= range.e.r; row++) {
   for (let col = 6; col <= 16; col++) {
     const nombreImagen = getCell(worksheet, row, col);
     if (nombreImagen && nombreImagen.toString().trim()) {
-      imagenes.push(`https://ferabensrl.github.io/mare-catalogo-web/imagenes/${nombreImagen.toString().trim()}.jpg`);
+      const nombre = nombreImagen.toString().trim();
+      // Verificar si ya tiene extensión
+      const tieneExtension = nombre.includes('.jpg') || nombre.includes('.png') || nombre.includes('.jpeg');
+      const urlImagen = tieneExtension 
+        ? `https://ferabensrl.github.io/mare-catalogo-web/imagenes/${nombre}`
+        : `https://ferabensrl.github.io/mare-catalogo-web/imagenes/${nombre}.jpg`;
+      imagenes.push(urlImagen);
     }
   }
   
