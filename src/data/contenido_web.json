@@ -1,0 +1,21 @@
+{
+  "destacados": [
+    {
+      "titulo": "Nueva colección",
+      "descripcion": "Descubrí los nuevos estilos de la temporada"
+    }
+  ],
+  "sobreNosotros": {
+    "historia": "Feraben SRL es la empresa detrás de MARÉ. Nos dedicamos al diseño y distribución mayorista de accesorios de moda.",
+    "mision": "Brindar productos de calidad que realcen tu estilo.",
+    "vision": "Ser referentes en accesorios mayoristas en la región.",
+    "valores": ["Diseño", "Calidad", "Detalles"]
+  },
+  "tips": [
+    {
+      "titulo": "Cómo combinar accesorios",
+      "imagen": "/imagenes/tip1.jpg",
+      "contenido": "Usá tonos neutros para destacar cada pieza."
+    }
+  ]
+}
